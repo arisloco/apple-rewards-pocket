@@ -18,7 +18,10 @@ const Header: React.FC<HeaderProps> = ({ userName = "Emma" }) => {
       title = "Rewards";
       break;
     case "/shops":
-      title = "Shops";
+      title = "Maps";
+      break;
+    case "/scan":
+      title = "Scan";
       break;
     case "/profile":
       title = "Profile";

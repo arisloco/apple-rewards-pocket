@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { Home, Ticket, MapPin, User } from 'lucide-react';
+import { Home, Ticket, Scan, MapPin, User } from 'lucide-react';
 
 const TabBar = () => {
   return (
@@ -17,19 +17,27 @@ const TabBar = () => {
         </NavLink>
         
         <NavLink 
+          to="/shops" 
+          className={({ isActive }) => `apple-tab ${isActive ? 'text-apple-blue' : 'text-gray-500'}`}
+        >
+          <MapPin className="h-6 w-6" strokeWidth={1.5} />
+          <span>Maps</span>
+        </NavLink>
+        
+        <NavLink 
+          to="/scan" 
+          className={({ isActive }) => `apple-tab ${isActive ? 'text-apple-blue' : 'text-gray-500'}`}
+        >
+          <Scan className="h-6 w-6" strokeWidth={1.5} />
+          <span>Scan</span>
+        </NavLink>
+        
+        <NavLink 
           to="/rewards" 
           className={({ isActive }) => `apple-tab ${isActive ? 'text-apple-blue' : 'text-gray-500'}`}
         >
           <Ticket className="h-6 w-6" strokeWidth={1.5} />
           <span>Rewards</span>
-        </NavLink>
-        
-        <NavLink 
-          to="/shops" 
-          className={({ isActive }) => `apple-tab ${isActive ? 'text-apple-blue' : 'text-gray-500'}`}
-        >
-          <MapPin className="h-6 w-6" strokeWidth={1.5} />
-          <span>Shops</span>
         </NavLink>
         
         <NavLink 
