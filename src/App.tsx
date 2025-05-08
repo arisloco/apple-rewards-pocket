@@ -10,6 +10,7 @@ import ShopsPage from "./pages/ShopsPage";
 import ProfilePage from "./pages/ProfilePage";
 import ScanPage from "./pages/ScanPage";
 import NotFound from "./pages/NotFound";
+import LoginPage from "./pages/LoginPage";
 
 const queryClient = new QueryClient();
 
@@ -20,6 +21,7 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
+          <Route path="/login" element={<LoginPage />} />
           <Route path="/" element={<Index />} />
           <Route path="/rewards" element={<RewardsPage />} />
           <Route path="/shops" element={<ShopsPage />} />

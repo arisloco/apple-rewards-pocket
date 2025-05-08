@@ -5,6 +5,13 @@ import Header from '../components/Header';
 import TabBar from '../components/TabBar';
 import RewardCard from '../components/RewardCard';
 import CardDetail from '../components/CardDetail';
+import HomeCarousel from '../components/HomeCarousel';
+import { 
+  Coffee, Utensils, ShoppingBag, Scissors, 
+  HeartPulse, Gift, Calendar, Ticket
+} from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { motion } from 'framer-motion';
 
 const Index = () => {
   const navigate = useNavigate();
@@ -46,6 +53,55 @@ const Index = () => {
     }
   ];
 
+  const carouselItems = [
+    {
+      id: "featured-1",
+      image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=640&h=360&fit=crop",
+      title: "Tech Haven",
+      description: "New gadgets await - 15% off for members"
+    },
+    {
+      id: "featured-2",
+      image: "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?w=640&h=360&fit=crop",
+      title: "Sweet Treats",
+      description: "Dessert paradise - Free dessert with any meal"
+    },
+    {
+      id: "featured-3",
+      image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=640&h=360&fit=crop",
+      title: "Urban Brew",
+      description: "Perfect coffee, perfect day - 2x points this week"
+    }
+  ];
+  
+  const categories = [
+    { id: "cat-1", name: "Coffee", icon: <Coffee size={24} />, color: "bg-amber-50" },
+    { id: "cat-2", name: "Food", icon: <Utensils size={24} />, color: "bg-red-50" },
+    { id: "cat-3", name: "Shopping", icon: <ShoppingBag size={24} />, color: "bg-blue-50" },
+    { id: "cat-4", name: "Beauty", icon: <Scissors size={24} />, color: "bg-pink-50" },
+    { id: "cat-5", name: "Health", icon: <HeartPulse size={24} />, color: "bg-green-50" },
+    { id: "cat-6", name: "Gifts", icon: <Gift size={24} />, color: "bg-purple-50" },
+    { id: "cat-7", name: "Events", icon: <Calendar size={24} />, color: "bg-yellow-50" },
+    { id: "cat-8", name: "Entertainment", icon: <Ticket size={24} />, color: "bg-indigo-50" }
+  ];
+  
+  const favoriteShops = [
+    {
+      id: "shop-1",
+      name: "Urban Brew",
+      logo: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=64&h=64&fit=crop&crop=center",
+      category: "Coffee Shop",
+      points: 120
+    },
+    {
+      id: "shop-3",
+      name: "Sweet Treats",
+      logo: "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?w=64&h=64&fit=crop&crop=center",
+      category: "Bakery",
+      points: 85
+    }
+  ];
+  
   const handleCardClick = (rewardId: string) => {
     setSelectedCard(rewardId);
   };
@@ -53,13 +109,121 @@ const Index = () => {
   const allRewards = [...activeRewards, ...suggestedRewards];
   const selectedReward = allRewards.find(reward => reward.id === selectedCard);
 
+  // Animation variants for staggered children
+  const container = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+  
+  const item = {
+    hidden: { y: 20, opacity: 0 },
+    show: { y: 0, opacity: 1 }
+  };
+
   return (
     <div className="min-h-screen bg-apple-light-gray pb-20">
       <Header userName="Emma" />
       
       <main className="apple-container pt-2">
-        <div className="mb-8">
-          <h2 className="text-xl font-bold mb-4">Your Active Rewards</h2>
+        {/* Welcome section */}
+        <motion.div 
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          className="mb-6"
+        >
+          <div className="premium-card p-5 rounded-2xl mb-8">
+            <div className="flex justify-between items-center mb-3">
+              <h2 className="text-xl font-bold">Good Morning, Emma</h2>
+              <div className="bg-white/20 p-2 rounded-full">
+                <Ticket className="h-5 w-5" />
+              </div>
+            </div>
+            <div className="flex items-center space-x-4">
+              <div className="bg-white/20 rounded-full p-3">
+                <div className="h-10 w-10 rounded-full bg-loyalt-primary flex items-center justify-center">
+                  <span className="text-white font-bold">248</span>
+                </div>
+              </div>
+              <div>
+                <p className="text-sm text-white/80">Total Points</p>
+                <p className="font-semibold">You're 52 points away from your next reward!</p>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+        
+        {/* Featured Carousel */}
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2 }}
+          className="mb-8"
+        >
+          <h2 className="section-title">Featured Shops</h2>
+          <HomeCarousel items={carouselItems} />
+        </motion.div>
+        
+        {/* Daily Offer */}
+        <motion.div 
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="mb-8"
+        >
+          <h2 className="section-title">Today's Special</h2>
+          <div className="daily-offer">
+            <div className="flex justify-between items-start">
+              <div>
+                <span className="bg-white/20 text-xs px-2 py-1 rounded-full">Limited Time</span>
+                <h3 className="text-xl font-bold mt-2">Double Points Tuesday!</h3>
+                <p className="text-white/80 mt-1 mb-4">Earn 2x points on all purchases today</p>
+                <Button className="bg-white text-loyalt-primary hover:bg-white/90">
+                  View Participating Shops
+                </Button>
+              </div>
+              <div className="bg-white/20 p-4 rounded-full">
+                <Calendar className="h-8 w-8" />
+              </div>
+            </div>
+          </div>
+        </motion.div>
+        
+        {/* Categories */}
+        <motion.div 
+          initial="hidden"
+          animate="show"
+          variants={container}
+          className="mb-8"
+        >
+          <h2 className="section-title">Categories</h2>
+          <div className="grid grid-cols-4 gap-3">
+            {categories.map((category) => (
+              <motion.div key={category.id} variants={item} className="category-card">
+                <div className={`w-12 h-12 rounded-full ${category.color} flex items-center justify-center mb-2`}>
+                  {React.cloneElement(category.icon as React.ReactElement, {
+                    className: "text-gray-700"
+                  })}
+                </div>
+                <span className="text-xs font-medium text-center">{category.name}</span>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Your Active Rewards */}
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.4 }}
+          className="mb-8"
+        >
+          <h2 className="section-title">Your Active Rewards</h2>
           {activeRewards.length > 0 ? (
             <div className="apple-card-container">
               {activeRewards.map(reward => (
@@ -81,10 +245,46 @@ const Index = () => {
               </button>
             </div>
           )}
-        </div>
+        </motion.div>
+        
+        {/* Your Favorite Shops */}
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
+          className="mb-8"
+        >
+          <h2 className="section-title">Your Favorites</h2>
+          <div className="space-y-3">
+            {favoriteShops.map(shop => (
+              <motion.div 
+                key={shop.id} 
+                whileHover={{ scale: 1.01 }}
+                className="premium-card flex items-center p-4"
+              >
+                <div className="h-12 w-12 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden">
+                  <img src={shop.logo} alt={shop.name} className="h-10 w-10 object-cover" />
+                </div>
+                <div className="ml-4 flex-1">
+                  <h3 className="font-bold">{shop.name}</h3>
+                  <p className="text-xs text-gray-500">{shop.category}</p>
+                </div>
+                <div className="bg-loyalt-primary/10 px-3 py-1 rounded-full">
+                  <span className="text-sm text-loyalt-primary font-medium">{shop.points} pts</span>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
 
-        <div className="mb-8">
-          <h2 className="text-xl font-bold mb-4">Suggested For You</h2>
+        {/* Suggested For You */}
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6 }}
+          className="mb-8"
+        >
+          <h2 className="section-title">Suggested For You</h2>
           <div className="apple-card-container">
             {suggestedRewards.map(reward => (
               <RewardCard 
@@ -94,17 +294,7 @@ const Index = () => {
               />
             ))}
           </div>
-        </div>
-        
-        <div className="mb-8">
-          <h2 className="text-xl font-bold mb-4">Nearby Offers</h2>
-          <div className="apple-card p-6 flex flex-col items-center">
-            <p className="text-gray-500 mb-3">Enable location to see nearby offers</p>
-            <button className="apple-button text-sm">
-              Enable Location
-            </button>
-          </div>
-        </div>
+        </motion.div>
       </main>
 
       <TabBar />

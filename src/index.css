@@ -43,6 +43,10 @@
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+    
+    /* LoyalT brand colors */
+    --loyalt-gradient-start: #73e5c5;
+    --loyalt-gradient-end: #009ea3;
   }
 
   .dark {
@@ -95,14 +99,14 @@
   }
 }
 
-/* Apple-style custom classes */
+/* LoyalT custom classes */
 @layer components {
   .apple-card {
-    @apply bg-white rounded-2xl shadow-apple-card transition-all duration-300 ease-out;
+    @apply bg-white rounded-2xl shadow-premium transition-all duration-300 ease-out hover:shadow-premium-hover;
   }
   
   .apple-button {
-    @apply bg-apple-blue text-white rounded-full px-6 py-3 font-medium shadow-apple-button transition-all duration-200 hover:opacity-90 active:scale-95;
+    @apply bg-loyalt-primary text-white rounded-full px-6 py-3 font-medium shadow-apple-button transition-all duration-200 hover:opacity-90 active:scale-95;
   }
   
   .apple-tab {
@@ -110,11 +114,35 @@
   }
   
   .apple-card-container {
-    @apply flex overflow-x-auto pb-4 gap-4 px-4 hide-scrollbar snap-x snap-mandatory;
+    @apply flex overflow-x-auto pb-6 gap-4 px-4 hide-scrollbar snap-x snap-mandatory;
   }
   
   .apple-container {
-    @apply px-5 py-3 md:px-8 md:py-4;
+    @apply px-5 py-4 md:px-8 md:py-6;
+  }
+  
+  .premium-card {
+    @apply bg-white rounded-2xl shadow-premium transition-all duration-300 hover:shadow-premium-hover;
+  }
+  
+  .category-card {
+    @apply flex flex-col items-center justify-center p-4 bg-white rounded-xl shadow-sm transition-all duration-200 hover:shadow-md;
+  }
+  
+  .section-title {
+    @apply text-xl font-bold mb-4;
+  }
+  
+  .premium-gradient {
+    @apply bg-gradient-to-br from-loyalt-gradient-start to-loyalt-gradient-end text-white;
+  }
+  
+  .daily-offer {
+    @apply bg-gradient-to-br from-loyalt-gradient-start to-loyalt-gradient-end rounded-2xl p-5 text-white shadow-premium;
+  }
+  
+  .premium-button {
+    @apply bg-loyalt-primary text-white font-medium py-3 px-6 rounded-full shadow-sm transition-all hover:shadow-md active:scale-98 disabled:opacity-70;
   }
 }
 
@@ -127,5 +155,13 @@
   
   .hide-scrollbar::-webkit-scrollbar {
     display: none;
+  }
+  
+  .text-shadow {
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  }
+  
+  .active-scale {
+    @apply transition-transform active:scale-95;
   }
 }

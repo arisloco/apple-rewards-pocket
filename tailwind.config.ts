@@ -63,12 +63,22 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				// Custom Apple-inspired colors
+				// Custom LoyalT brand colors based on your provided image
+				'loyalt': {
+					'primary': '#00717a',  // Teal color from the logo
+					'secondary': '#009ea3', // Lighter teal for accents
+					'gradient-start': '#73e5c5', // Gradient start color (top)
+					'gradient-end': '#009ea3',   // Gradient end color (bottom)
+					'text': '#333333',      // Dark gray for text
+					'light': '#f8f8f8',     // Light background
+					'card': '#ffffff',      // White for cards
+				},
+				// Updated Apple-inspired colors with premium feel
 				'apple-blue': '#007AFF',
 				'apple-green': '#34C759',
 				'apple-red': '#FF3B30',
 				'apple-gray': '#8E9196',
-				'apple-light-gray': '#F1F1F1',
+				'apple-light-gray': '#F8F8F8',
 				'apple-background': '#FFFFFF',
 			},
 			borderRadius: {
@@ -78,20 +88,12 @@ export default {
 			},
 			keyframes: {
 				'accordion-down': {
-					from: {
-						height: '0'
-					},
-					to: {
-						height: 'var(--radix-accordion-content-height)'
-					}
+					from: { height: '0' },
+					to: { height: 'var(--radix-accordion-content-height)' }
 				},
 				'accordion-up': {
-					from: {
-						height: 'var(--radix-accordion-content-height)'
-					},
-					to: {
-						height: '0'
-					}
+					from: { height: 'var(--radix-accordion-content-height)' },
+					to: { height: '0' }
 				},
 				'card-slide': {
 					'0%': { transform: 'translateX(10px)', opacity: '0' },
@@ -100,17 +102,38 @@ export default {
 				'card-hover': {
 					'0%': { transform: 'scale(1)' },
 					'100%': { transform: 'scale(1.02)' }
+				},
+				'fade-in': {
+					'0%': { opacity: '0' },
+					'100%': { opacity: '1' }
+				},
+				'slide-up': {
+					'0%': { transform: 'translateY(10px)', opacity: '0' },
+					'100%': { transform: 'translateY(0)', opacity: '1' }
+				},
+				'pulse-slow': {
+					'0%, 100%': { opacity: '1' },
+					'50%': { opacity: '0.8' }
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
 				'card-slide': 'card-slide 0.3s ease-out',
-				'card-hover': 'card-hover 0.2s ease-out'
+				'card-hover': 'card-hover 0.2s ease-out',
+				'fade-in': 'fade-in 0.5s ease-out',
+				'slide-up': 'slide-up 0.3s ease-out',
+				'pulse-slow': 'pulse-slow 2s infinite'
 			},
 			boxShadow: {
 				'apple-card': '0 4px 12px rgba(0, 0, 0, 0.08)',
-				'apple-button': '0 2px 6px rgba(0, 0, 0, 0.06)'
+				'apple-button': '0 2px 6px rgba(0, 0, 0, 0.06)',
+				'premium': '0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01)',
+				'premium-hover': '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+			},
+			backgroundImage: {
+				'loyalt-gradient': 'linear-gradient(to bottom, var(--loyalt-gradient-start), var(--loyalt-gradient-end))',
+				'premium-gradient': 'linear-gradient(135deg, #73e5c5 0%, #009ea3 100%)',
 			}
 		}
 	},

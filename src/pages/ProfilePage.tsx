@@ -2,61 +2,164 @@
 import React from 'react';
 import Header from '../components/Header';
 import TabBar from '../components/TabBar';
+import { 
+  User, Settings, CreditCard, Gift, Bell, HelpCircle, LogOut,
+  ChevronRight, Shield, Share2, Star, Award, Lock
+} from 'lucide-react';
+import { motion } from 'framer-motion';
 
 const ProfilePage = () => {
+  const container = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+  
+  const item = {
+    hidden: { y: 10, opacity: 0 },
+    show: { y: 0, opacity: 1 }
+  };
+
+  const settingsGroups = [
+    {
+      title: "Account",
+      items: [
+        { icon: <User size={20} />, label: "Personal Information" },
+        { icon: <CreditCard size={20} />, label: "Payment Methods" },
+        { icon: <Gift size={20} />, label: "Refer a Friend" },
+        { icon: <Shield size={20} />, label: "Privacy Settings" }
+      ]
+    },
+    {
+      title: "App Settings",
+      items: [
+        { icon: <Bell size={20} />, label: "Notification Preferences" },
+        { icon: <Settings size={20} />, label: "App Settings" },
+        { icon: <HelpCircle size={20} />, label: "Help & Support" },
+        { icon: <Share2 size={20} />, label: "Share the App" }
+      ]
+    }
+  ];
+
   return (
     <div className="min-h-screen bg-apple-light-gray pb-20">
       <Header />
       
       <main className="apple-container">
-        <div className="apple-card p-6 mb-6">
-          <div className="flex flex-col items-center">
-            <div className="h-20 w-20 rounded-full bg-gray-200 flex items-center justify-center mb-4">
-              <svg className="h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zm-4 7a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-              </svg>
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          className="premium-card p-6 mb-6 rounded-2xl"
+        >
+          <div className="flex items-center">
+            <div className="mr-4">
+              <div className="h-20 w-20 rounded-full bg-gradient-to-br from-loyalt-gradient-start to-loyalt-gradient-end flex items-center justify-center text-white text-3xl font-semibold">
+                E
+              </div>
             </div>
-            <h2 className="text-xl font-bold">Emma Johnson</h2>
-            <p className="text-gray-500 text-sm">emma@example.com</p>
-            <button className="mt-4 text-apple-blue font-medium text-sm">
-              Edit Profile
+            <div className="flex-1">
+              <h2 className="text-xl font-bold">Emma Johnson</h2>
+              <p className="text-gray-500 text-sm">emma@example.com</p>
+              <div className="flex items-center mt-1">
+                <Star className="h-4 w-4 fill-yellow-400 stroke-yellow-400 mr-1" />
+                <span className="text-sm font-medium">Gold Member</span>
+              </div>
+            </div>
+            <button className="bg-loyalt-primary/10 rounded-full p-2">
+              <Settings className="h-5 w-5 text-loyalt-primary" />
             </button>
           </div>
-        </div>
-        
-        <div className="mb-6">
-          <h2 className="text-xl font-bold mb-4">Reward Stats</h2>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="apple-card p-4">
-              <h3 className="text-sm text-gray-500">Active Rewards</h3>
-              <p className="text-2xl font-bold">2</p>
-            </div>
-            <div className="apple-card p-4">
-              <h3 className="text-sm text-gray-500">Redeemed</h3>
-              <p className="text-2xl font-bold">5</p>
-            </div>
-            <div className="apple-card p-4">
-              <h3 className="text-sm text-gray-500">Total Points</h3>
-              <p className="text-2xl font-bold">248</p>
-            </div>
-            <div className="apple-card p-4">
-              <h3 className="text-sm text-gray-500">Shops Visited</h3>
-              <p className="text-2xl font-bold">3</p>
+          
+          <div className="mt-6 pt-6 border-t border-gray-100">
+            <div className="grid grid-cols-3 gap-2 text-center">
+              <div>
+                <p className="text-2xl font-bold">248</p>
+                <p className="text-xs text-gray-500">Points</p>
+              </div>
+              <div>
+                <p className="text-2xl font-bold">5</p>
+                <p className="text-xs text-gray-500">Redeemed</p>
+              </div>
+              <div>
+                <p className="text-2xl font-bold">3</p>
+                <p className="text-xs text-gray-500">Shops</p>
+              </div>
             </div>
           </div>
-        </div>
+          
+          <button className="w-full mt-5 bg-loyalt-primary text-white rounded-full py-2.5 text-sm font-medium flex items-center justify-center">
+            <Award className="h-4 w-4 mr-2" />
+            View Membership Benefits
+          </button>
+        </motion.div>
         
-        <div className="mb-6 space-y-3">
-          <h2 className="text-xl font-bold mb-4">Settings</h2>
-          {["Notification Preferences", "Connected Accounts", "Language", "Privacy Settings", "Help & Support", "About"].map(setting => (
-            <div key={setting} className="apple-card p-4 flex justify-between items-center">
-              <span>{setting}</span>
-              <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
-              </svg>
+        <motion.div 
+          initial="hidden"
+          animate="show"
+          variants={container}
+          className="space-y-6"
+        >
+          <div>
+            <div className="premium-card p-4 rounded-2xl">
+              <div className="flex justify-between items-center">
+                <div className="flex items-center">
+                  <div className="w-10 h-10 rounded-full bg-loyalt-primary/10 flex items-center justify-center mr-3">
+                    <Lock className="h-5 w-5 text-loyalt-primary" />
+                  </div>
+                  <div>
+                    <h3 className="font-medium">Exclusive Offers</h3>
+                    <p className="text-xs text-gray-500">3 new rewards available</p>
+                  </div>
+                </div>
+                <ChevronRight className="h-5 w-5 text-gray-400" />
+              </div>
             </div>
+          </div>
+          
+          {settingsGroups.map((group, idx) => (
+            <motion.div key={group.title} variants={item} className="space-y-2">
+              <h3 className="text-sm font-medium text-gray-500 ml-1">{group.title}</h3>
+              <div className="premium-card rounded-2xl overflow-hidden">
+                {group.items.map((item, index) => (
+                  <React.Fragment key={item.label}>
+                    <div className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50">
+                      <div className="flex items-center">
+                        <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center mr-3">
+                          {item.icon}
+                        </div>
+                        <span>{item.label}</span>
+                      </div>
+                      <ChevronRight className="h-5 w-5 text-gray-400" />
+                    </div>
+                    {index < group.items.length - 1 && <div className="h-px bg-gray-100 mx-4" />}
+                  </React.Fragment>
+                ))}
+              </div>
+            </motion.div>
           ))}
-        </div>
+          
+          <motion.div variants={item}>
+            <div className="premium-card p-4 rounded-2xl mt-4">
+              <div className="flex items-center text-red-500">
+                <div className="w-8 h-8 rounded-full bg-red-50 flex items-center justify-center mr-3">
+                  <LogOut className="h-5 w-5 text-red-500" />
+                </div>
+                <span>Log Out</span>
+              </div>
+            </div>
+          </motion.div>
+          
+          <motion.div variants={item} className="pt-3">
+            <p className="text-center text-xs text-gray-500">
+              LoyalT v1.0.0 • Terms of Service • Privacy Policy
+            </p>
+          </motion.div>
+        </motion.div>
       </main>
 
       <TabBar />
