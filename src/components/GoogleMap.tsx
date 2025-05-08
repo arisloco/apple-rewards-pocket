@@ -1,6 +1,13 @@
 
 import React, { useEffect, useState } from 'react';
 
+// Define Google Maps types
+declare global {
+  interface Window {
+    google: any;
+  }
+}
+
 interface Shop {
   id: string;
   name: string;
@@ -18,8 +25,8 @@ interface GoogleMapProps {
 
 const GoogleMap: React.FC<GoogleMapProps> = ({ shops }) => {
   const [mapLoaded, setMapLoaded] = useState(false);
-  const [mapInstance, setMapInstance] = useState<google.maps.Map | null>(null);
-  const [markers, setMarkers] = useState<google.maps.Marker[]>([]);
+  const [mapInstance, setMapInstance] = useState<any | null>(null);
+  const [markers, setMarkers] = useState<any[]>([]);
   
   // Google Maps API Placeholder - In a real app, you'd use a proper API key
   useEffect(() => {
@@ -51,7 +58,7 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ shops }) => {
     const mapElement = document.getElementById('google-map');
     if (!mapElement) return;
     
-    const map = new google.maps.Map(mapElement, {
+    const map = new window.google.maps.Map(mapElement, {
       center: { lat: 37.7749, lng: -122.4194 }, // Default center (San Francisco)
       zoom: 13,
       styles: [
@@ -87,7 +94,7 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ shops }) => {
     
     // Add markers for shops
     const newMarkers = shops.map(shop => {
-      const marker = new google.maps.Marker({
+      const marker = new window.google.maps.Marker({
         position: shop.location,
         map: map,
         title: shop.name,
@@ -98,7 +105,7 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ shops }) => {
               <circle cx="12" cy="10" r="3"></circle>
             </svg>
           `),
-          scaledSize: new google.maps.Size(30, 30)
+          scaledSize: new window.google.maps.Size(30, 30)
         }
       });
       
@@ -113,7 +120,7 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ shops }) => {
         </div>
       `;
       
-      const infoWindow = new google.maps.InfoWindow({
+      const infoWindow = new window.google.maps.InfoWindow({
         content: infoContent
       });
       
@@ -128,7 +135,7 @@ const GoogleMap: React.FC<GoogleMapProps> = ({ shops }) => {
     
     // Fit map to markers
     if (shops.length > 0) {
-      const bounds = new google.maps.LatLngBounds();
+      const bounds = new window.google.maps.LatLngBounds();
       shops.forEach(shop => {
         bounds.extend(shop.location);
       });

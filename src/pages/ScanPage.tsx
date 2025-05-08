@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import Header from '../components/Header';
 import TabBar from '../components/TabBar';
-import { Scan, Camera, CameraOff, FlashOn, FlashOff, QrCode } from 'lucide-react';
+import { Scan, Camera, CameraOff, Zap, ZapOff, QrCode } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 
@@ -64,7 +64,7 @@ const ScanPage = () => {
                     className="w-12 h-12 bg-white/20 rounded-full backdrop-blur-md flex items-center justify-center"
                     onClick={toggleFlash}
                   >
-                    {flashOn ? <FlashOff className="text-white" /> : <FlashOn className="text-white" />}
+                    {flashOn ? <ZapOff className="text-white" /> : <Zap className="text-white" />}
                   </button>
                   <button 
                     className="w-16 h-16 bg-white rounded-full flex items-center justify-center"
