@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,7 +62,14 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
-				}
+				},
+				// Custom Apple-inspired colors
+				'apple-blue': '#007AFF',
+				'apple-green': '#34C759',
+				'apple-red': '#FF3B30',
+				'apple-gray': '#8E9196',
+				'apple-light-gray': '#F1F1F1',
+				'apple-background': '#FFFFFF',
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -84,11 +92,25 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'card-slide': {
+					'0%': { transform: 'translateX(10px)', opacity: '0' },
+					'100%': { transform: 'translateX(0)', opacity: '1' }
+				},
+				'card-hover': {
+					'0%': { transform: 'scale(1)' },
+					'100%': { transform: 'scale(1.02)' }
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'card-slide': 'card-slide 0.3s ease-out',
+				'card-hover': 'card-hover 0.2s ease-out'
+			},
+			boxShadow: {
+				'apple-card': '0 4px 12px rgba(0, 0, 0, 0.08)',
+				'apple-button': '0 2px 6px rgba(0, 0, 0, 0.06)'
 			}
 		}
 	},

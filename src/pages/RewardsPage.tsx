@@ -1,13 +1,11 @@
 
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import TabBar from '../components/TabBar';
 import RewardCard from '../components/RewardCard';
 import CardDetail from '../components/CardDetail';
 
-const Index = () => {
-  const navigate = useNavigate();
+const RewardsPage = () => {
   const [selectedCard, setSelectedCard] = useState<string | null>(null);
   
   const activeRewards = [
@@ -20,6 +18,16 @@ const Index = () => {
       isActive: true,
       expiryDate: "May 15, 2025",
       color: "bg-gradient-to-br from-amber-500 to-amber-600"
+    },
+    {
+      id: "reward-4",
+      title: "Free Dessert",
+      shopName: "Sweet Treats",
+      shopLogo: "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?w=64&h=64&fit=crop&crop=center",
+      description: "Get a free dessert with any meal purchase",
+      isActive: true,
+      expiryDate: "May 20, 2025",
+      color: "bg-gradient-to-br from-rose-500 to-rose-600"
     }
   ];
   
@@ -43,6 +51,16 @@ const Index = () => {
       isActive: false,
       expiryDate: "May 30, 2025",
       color: "bg-gradient-to-br from-purple-500 to-purple-600"
+    },
+    {
+      id: "reward-5",
+      title: "15% Off Purchase",
+      shopName: "Tech Haven",
+      shopLogo: "https://images.unsplash.com/photo-1582562124811-c09040d0a901?w=64&h=64&fit=crop&crop=center",
+      description: "Save 15% on your next tech purchase",
+      isActive: false,
+      expiryDate: "June 5, 2025",
+      color: "bg-gradient-to-br from-blue-500 to-blue-600"
     }
   ];
 
@@ -55,11 +73,11 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-apple-light-gray pb-20">
-      <Header userName="Emma" />
+      <Header />
       
       <main className="apple-container pt-2">
         <div className="mb-8">
-          <h2 className="text-xl font-bold mb-4">Your Active Rewards</h2>
+          <h2 className="text-xl font-bold mb-4">Active Rewards</h2>
           {activeRewards.length > 0 ? (
             <div className="apple-card-container">
               {activeRewards.map(reward => (
@@ -73,10 +91,7 @@ const Index = () => {
           ) : (
             <div className="apple-card text-center p-8">
               <p>No active rewards yet</p>
-              <button 
-                className="apple-button mt-4"
-                onClick={() => navigate('/shops')}
-              >
+              <button className="apple-button mt-4">
                 Explore Shops
               </button>
             </div>
@@ -84,7 +99,7 @@ const Index = () => {
         </div>
 
         <div className="mb-8">
-          <h2 className="text-xl font-bold mb-4">Suggested For You</h2>
+          <h2 className="text-xl font-bold mb-4">Available Rewards</h2>
           <div className="apple-card-container">
             {suggestedRewards.map(reward => (
               <RewardCard 
@@ -97,12 +112,9 @@ const Index = () => {
         </div>
         
         <div className="mb-8">
-          <h2 className="text-xl font-bold mb-4">Nearby Offers</h2>
-          <div className="apple-card p-6 flex flex-col items-center">
-            <p className="text-gray-500 mb-3">Enable location to see nearby offers</p>
-            <button className="apple-button text-sm">
-              Enable Location
-            </button>
+          <h2 className="text-xl font-bold mb-4">Expiring Soon</h2>
+          <div className="apple-card p-6">
+            <p className="text-center text-gray-500">No rewards expiring soon</p>
           </div>
         </div>
       </main>
@@ -120,4 +132,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default RewardsPage;
