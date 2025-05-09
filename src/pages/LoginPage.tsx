@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Flashlight, Camera } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -10,6 +10,21 @@ const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [currentTime, setCurrentTime] = useState('');
+  
+  // Update time every minute
+  useEffect(() => {
+    const updateTime = () => {
+      const now = new Date();
+      const hours = now.getHours();
+      const minutes = now.getMinutes().toString().padStart(2, '0');
+      setCurrentTime(`${hours}:${minutes}`);
+    };
+    
+    updateTime();
+    const interval = setInterval(updateTime, 60000);
+    return () => clearInterval(interval);
+  }, []);
   
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,7 +35,7 @@ const LoginPage = () => {
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-loyalt-gradient-start to-loyalt-gradient-end">
       {/* Status bar */}
       <div className="flex justify-between items-center p-4">
-        <div className="text-sm font-medium text-white/90">9:50</div>
+        <div className="text-sm font-medium text-white/90">{currentTime}</div>
         <div className="bg-black rounded-full py-1 px-6">
           <div className="w-4 h-4">
             <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -41,7 +56,7 @@ const LoginPage = () => {
         {/* Swipe up text */}
         <div className="mb-12 text-center">
           <h2 className="text-4xl font-semibold text-white/90 mb-2">Swipe up to unlock</h2>
-          <div className="text-[120px] text-white/80 font-thin">9:50</div>
+          <div className="text-[120px] text-white/80 font-thin">{currentTime}</div>
         </div>
         
         {/* Logo */}
@@ -63,8 +78,9 @@ const LoginPage = () => {
         <form onSubmit={handleLogin} className="w-full max-w-md space-y-4 mt-6">
           {/* Apple Sign in */}
           <button 
-            className="w-full bg-white text-black rounded-full py-3 px-4 flex items-center justify-center font-medium space-x-2 shadow-sm"
             type="button"
+            className="w-full bg-white text-black rounded-full py-3 px-4 flex items-center justify-center font-medium space-x-2 shadow-sm"
+            onClick={() => console.log("Apple login")}
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none">
               <path d="M17.0919 12.8228C17.0799 10.9348 18.6039 9.9088 18.6559 9.8768C17.6759 8.4368 16.1579 8.2308 15.6119 8.2128C14.3279 8.0848 13.0919 8.9928 12.4399 8.9928C11.7719 8.9928 10.7679 8.2248 9.6839 8.2488C8.2959 8.2728 7.0079 9.0368 6.3159 10.2168C4.8839 12.6168 5.9599 16.1408 7.3399 18.0108C8.0279 18.9228 8.8319 19.9468 9.8719 19.9028C10.8799 19.8588 11.2479 19.2368 12.4639 19.2368C13.6639 19.2368 14.0079 19.9028 15.0639 19.8768C16.1559 19.8588 16.8519 18.9468 17.5159 18.0228C18.2999 16.9628 18.6199 15.9268 18.6319 15.8828C18.6079 15.8708 17.1039 15.2848 17.0919 12.8228Z" fill="black"/>
@@ -75,8 +91,9 @@ const LoginPage = () => {
           
           {/* Google Sign in */}
           <button
-            className="w-full bg-white text-black rounded-full py-3 px-4 flex items-center justify-center font-medium space-x-2 shadow-sm"
             type="button"
+            className="w-full bg-white text-black rounded-full py-3 px-4 flex items-center justify-center font-medium space-x-2 shadow-sm"
+            onClick={() => console.log("Google login")}
           >
             <svg className="w-5 h-5" viewBox="0 0 48 48">
               <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/>
