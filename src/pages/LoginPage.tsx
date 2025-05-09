@@ -11,6 +11,7 @@ const LoginPage = () => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [currentTime, setCurrentTime] = useState('');
+  const [userType, setUserType] = useState<'client' | 'vendor'>('client');
   
   // Update time every minute
   useEffect(() => {
@@ -28,7 +29,12 @@ const LoginPage = () => {
   
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    navigate('/');
+    // Route based on user type
+    if (userType === 'vendor') {
+      navigate('/vendor/dashboard');
+    } else {
+      navigate('/rewards');
+    }
   };
   
   return (
@@ -74,8 +80,36 @@ const LoginPage = () => {
           </div>
         </div>
         
+        {/* User Type Selection */}
+        <div className="w-full max-w-md mb-6">
+          <div className="bg-white/10 backdrop-blur-md rounded-full flex p-1">
+            <button
+              type="button"
+              onClick={() => setUserType('client')}
+              className={`flex-1 py-3 rounded-full transition-all ${
+                userType === 'client' 
+                  ? 'bg-white text-loyalt-primary font-medium shadow-sm' 
+                  : 'text-white/80'
+              }`}
+            >
+              Client
+            </button>
+            <button
+              type="button"
+              onClick={() => setUserType('vendor')}
+              className={`flex-1 py-3 rounded-full transition-all ${
+                userType === 'vendor' 
+                  ? 'bg-white text-loyalt-primary font-medium shadow-sm' 
+                  : 'text-white/80'
+              }`}
+            >
+              Business
+            </button>
+          </div>
+        </div>
+        
         {/* Login form */}
-        <form onSubmit={handleLogin} className="w-full max-w-md space-y-4 mt-6">
+        <form onSubmit={handleLogin} className="w-full max-w-md space-y-4">
           {/* Apple Sign in */}
           <button 
             type="button"
@@ -140,7 +174,7 @@ const LoginPage = () => {
             type="submit"
             className="w-full py-6 bg-loyalt-primary text-white font-semibold text-lg rounded-full hover:bg-opacity-90 transition-all"
           >
-            Get Started
+            {userType === 'vendor' ? 'Access Business Portal' : 'Get Started'}
           </Button>
           
           {/* Forgot Password Link */}
