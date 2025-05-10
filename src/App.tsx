@@ -1,4 +1,5 @@
 
+import { useState, useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -12,28 +13,112 @@ import ScanPage from "./pages/ScanPage";
 import NotFound from "./pages/NotFound";
 import LoginPage from "./pages/LoginPage";
 import VendorDashboard from "./pages/VendorDashboard";
+import WelcomeScreen from "./components/WelcomeScreen";
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/rewards" element={<RewardsPage />} />
-          <Route path="/shops" element={<ShopsPage />} />
-          <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/scan" element={<ScanPage />} />
-          <Route path="/vendor/dashboard" element={<VendorDashboard />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+const App = () => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    // Check if user is logged in from localStorage
+    return localStorage.getItem("isLoggedIn") === "true";
+  });
+
+  useEffect(() => {
+    // Simulate loading time for welcome animation
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Function to handle login state
+  const handleLogin = () => {
+    localStorage.setItem("isLoggedIn", "true");
+    setIsLoggedIn(true);
+  };
+
+  // Function to handle logout
+  const handleLogout = () => {
+    localStorage.removeItem("isLoggedIn");
+    setIsLoggedIn(false);
+  };
+
+  // Show welcome screen while loading
+  if (isLoading) {
+    return <WelcomeScreen />;
+  }
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
+            <Route 
+              path="/login" 
+              element={
+                isLoggedIn ? 
+                <Navigate to="/" /> : 
+                <LoginPage onLogin={handleLogin} />
+              } 
+            />
+            <Route 
+              path="/" 
+              element={
+                isLoggedIn ? 
+                <Index /> : 
+                <Navigate to="/login" />
+              } 
+            />
+            <Route 
+              path="/rewards" 
+              element={
+                isLoggedIn ? 
+                <RewardsPage onLogout={handleLogout} /> : 
+                <Navigate to="/login" />
+              } 
+            />
+            <Route 
+              path="/shops" 
+              element={
+                isLoggedIn ? 
+                <ShopsPage onLogout={handleLogout} /> : 
+                <Navigate to="/login" />
+              } 
+            />
+            <Route 
+              path="/profile" 
+              element={
+                isLoggedIn ? 
+                <ProfilePage onLogout={handleLogout} /> : 
+                <Navigate to="/login" />
+              } 
+            />
+            <Route 
+              path="/scan" 
+              element={
+                isLoggedIn ? 
+                <ScanPage onLogout={handleLogout} /> : 
+                <Navigate to="/login" />
+              } 
+            />
+            <Route 
+              path="/vendor/dashboard" 
+              element={
+                isLoggedIn ? 
+                <VendorDashboard onLogout={handleLogout} /> : 
+                <Navigate to="/login" />
+              } 
+            />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;

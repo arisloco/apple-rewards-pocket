@@ -1,34 +1,25 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Eye, EyeOff, Flashlight, Camera } from 'lucide-react';
+import { Eye, EyeOff } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { motion } from 'framer-motion';
 
-const LoginPage = () => {
+interface LoginPageProps {
+  onLogin: () => void;
+}
+
+const LoginPage = ({ onLogin }: LoginPageProps) => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [currentTime, setCurrentTime] = useState('');
   const [userType, setUserType] = useState<'client' | 'vendor'>('client');
-  
-  // Update time every minute
-  useEffect(() => {
-    const updateTime = () => {
-      const now = new Date();
-      const hours = now.getHours();
-      const minutes = now.getMinutes().toString().padStart(2, '0');
-      setCurrentTime(`${hours}:${minutes}`);
-    };
-    
-    updateTime();
-    const interval = setInterval(updateTime, 60000);
-    return () => clearInterval(interval);
-  }, []);
   
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
+    onLogin();
     // Route based on user type
     if (userType === 'vendor') {
       navigate('/vendor/dashboard');
@@ -38,57 +29,52 @@ const LoginPage = () => {
   };
   
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-b from-loyalt-gradient-start to-loyalt-gradient-end">
-      {/* Status bar */}
-      <div className="flex justify-between items-center p-4">
-        <div className="text-sm font-medium text-white/90">{currentTime}</div>
-        <div className="bg-black rounded-full py-1 px-6">
-          <div className="w-4 h-4">
-            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12 13V6M15 8V6M9 10V6M18 11.9996C18 16.1421 14.6421 19.5 10.5 19.5C6.35786 19.5 3 16.1421 3 11.9996C3 7.85733 6.35786 4.5 10.5 4.5C14.6421 4.5 18 7.85733 18 11.9996Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </div>
-        </div>
-        <div className="flex items-center space-x-1 text-white">
-          <span className="text-xs font-medium">100%</span>
-          <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="2" y="6" width="20" height="12" rx="2" stroke="white" strokeWidth="2" />
-            <rect x="4" y="8" width="16" height="8" rx="1" fill="white" />
-          </svg>
-        </div>
-      </div>
-      
+    <motion.div 
+      className="min-h-screen flex flex-col bg-gradient-to-b from-loyalt-gradient-start to-loyalt-gradient-end"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.5 }}
+    >      
       <div className="flex-1 flex flex-col items-center justify-center px-8">
-        {/* Swipe up text */}
-        <div className="mb-12 text-center">
-          <h2 className="text-4xl font-semibold text-white/90 mb-2">Swipe up to unlock</h2>
-          <div className="text-[120px] text-white/80 font-thin">{currentTime}</div>
-        </div>
-        
         {/* Logo */}
-        <div className="my-8 text-center">
-          <div className="flex items-center justify-center mb-2">
-            <div className="bg-white/20 backdrop-blur-md rounded-xl p-3 mr-3">
-              <div className="w-12 h-12 bg-loyalt-primary rounded-lg flex items-center justify-center">
+        <motion.div 
+          className="my-8 text-center"
+          initial={{ y: -50, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ 
+            duration: 0.8, 
+            type: "spring",
+            damping: 15
+          }}
+        >
+          <div className="flex items-center justify-center mb-6">
+            <div className="bg-white/10 backdrop-blur-md rounded-xl p-3 mr-3">
+              <div className="w-12 h-12 bg-[#009ea3] rounded-lg flex items-center justify-center">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M20 10V7C20 5.89543 19.1046 5 18 5H6C4.89543 5 4 5.89543 4 7V10M20 10V19C20 20.1046 19.1046 21 18 21H6C4.89543 21 4 20.1046 4 19V10M20 10H4M9 13H15" stroke="white" strokeWidth="2" strokeLinecap="round" />
                   <path d="M12 16C12.5523 16 13 15.5523 13 15C13 14.4477 12.5523 14 12 14C11.4477 14 11 14.4477 11 15C11 15.5523 11.4477 16 12 16Z" fill="white" />
                 </svg>
               </div>
             </div>
-            <h1 className="text-4xl font-bold text-loyalt-primary">Loyal<span className="text-white">T</span></h1>
+            <h1 className="text-4xl font-bold text-[#009ea3]">Loyal<span className="text-white">T</span></h1>
           </div>
-        </div>
+        </motion.div>
         
         {/* User Type Selection */}
-        <div className="w-full max-w-md mb-6">
+        <motion.div 
+          className="w-full max-w-md mb-6"
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.2, duration: 0.5 }}
+        >
           <div className="bg-white/10 backdrop-blur-md rounded-full flex p-1">
             <button
               type="button"
               onClick={() => setUserType('client')}
               className={`flex-1 py-3 rounded-full transition-all ${
                 userType === 'client' 
-                  ? 'bg-white text-loyalt-primary font-medium shadow-sm' 
+                  ? 'bg-white text-[#009ea3] font-medium shadow-sm' 
                   : 'text-white/80'
               }`}
             >
@@ -99,21 +85,29 @@ const LoginPage = () => {
               onClick={() => setUserType('vendor')}
               className={`flex-1 py-3 rounded-full transition-all ${
                 userType === 'vendor' 
-                  ? 'bg-white text-loyalt-primary font-medium shadow-sm' 
+                  ? 'bg-white text-[#009ea3] font-medium shadow-sm' 
                   : 'text-white/80'
               }`}
             >
               Business
             </button>
           </div>
-        </div>
+        </motion.div>
         
         {/* Login form */}
-        <form onSubmit={handleLogin} className="w-full max-w-md space-y-4">
+        <motion.form 
+          onSubmit={handleLogin} 
+          className="w-full max-w-md space-y-4"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3, duration: 0.5 }}
+        >
           {/* Apple Sign in */}
-          <button 
+          <motion.button 
             type="button"
             className="w-full bg-white text-black rounded-full py-3 px-4 flex items-center justify-center font-medium space-x-2 shadow-sm"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
             onClick={() => console.log("Apple login")}
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none">
@@ -121,12 +115,14 @@ const LoginPage = () => {
               <path d="M15.3839 6.8528C15.9399 6.1648 16.3079 5.2168 16.1999 4.2488C15.3959 4.2848 14.3679 4.8048 13.7879 5.4688C13.2799 6.0528 12.8399 7.0488 12.9599 7.9728C13.8719 8.0548 14.8039 7.5288 15.3839 6.8528Z" fill="black"/>
             </svg>
             <span>Sign in with Apple</span>
-          </button>
+          </motion.button>
           
           {/* Google Sign in */}
-          <button
+          <motion.button
             type="button"
             className="w-full bg-white text-black rounded-full py-3 px-4 flex items-center justify-center font-medium space-x-2 shadow-sm"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
             onClick={() => console.log("Google login")}
           >
             <svg className="w-5 h-5" viewBox="0 0 48 48">
@@ -136,26 +132,36 @@ const LoginPage = () => {
               <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/>
             </svg>
             <span>Sign in with Google</span>
-          </button>
+          </motion.button>
           
           {/* Email Input */}
-          <div className="relative">
+          <motion.div 
+            className="relative"
+            initial={{ x: -20, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ delay: 0.4, duration: 0.3 }}
+          >
             <Input
               type="email"
               placeholder="Email"
-              className="bg-white/90 backdrop-blur-sm border-0 rounded-full px-6 py-6 text-loyalt-text text-lg"
+              className="bg-white/90 backdrop-blur-sm border-0 rounded-full px-6 py-6 text-[#009ea3] text-lg"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
             />
-          </div>
+          </motion.div>
           
           {/* Password Input */}
-          <div className="relative">
+          <motion.div 
+            className="relative"
+            initial={{ x: 20, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ delay: 0.5, duration: 0.3 }}
+          >
             <Input
               type={showPassword ? "text" : "password"}
               placeholder="Password"
-              className="bg-white/90 backdrop-blur-sm border-0 rounded-full px-6 py-6 text-loyalt-text text-lg"
+              className="bg-white/90 backdrop-blur-sm border-0 rounded-full px-6 py-6 text-[#009ea3] text-lg"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -167,43 +173,44 @@ const LoginPage = () => {
             >
               {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
             </button>
-          </div>
+          </motion.div>
           
           {/* Login Button */}
-          <Button
+          <motion.button
             type="submit"
-            className="w-full py-6 bg-loyalt-primary text-white font-semibold text-lg rounded-full hover:bg-opacity-90 transition-all"
+            className="w-full py-6 bg-[#009ea3] text-white font-semibold text-lg rounded-full hover:bg-opacity-90 transition-all"
+            whileHover={{ scale: 1.02, boxShadow: "0px 5px 15px rgba(0, 158, 163, 0.3)" }}
+            whileTap={{ scale: 0.98 }}
           >
             {userType === 'vendor' ? 'Access Business Portal' : 'Get Started'}
-          </Button>
+          </motion.button>
           
           {/* Forgot Password Link */}
-          <div className="text-center mt-4">
+          <motion.div 
+            className="text-center mt-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.7, duration: 0.3 }}
+          >
             <a href="#" className="text-white text-sm hover:underline">
               Forgot password?
             </a>
-          </div>
+          </motion.div>
           
           {/* Sign Up Link */}
-          <div className="text-center mt-6 flex items-center justify-between">
-            <div className="bg-white/20 backdrop-blur-md rounded-full p-3">
-              <Flashlight size={24} className="text-white" />
-            </div>
-            
-            <div className="flex items-center">
-              <span className="text-white mr-2">Don't have an account?</span>
-              <a href="#" className="text-white font-semibold">Sign up</a>
-            </div>
-            
-            <div className="bg-white/20 backdrop-blur-md rounded-full p-3">
-              <Camera size={24} className="text-white" />
-            </div>
-          </div>
-        </form>
+          <motion.div 
+            className="text-center mt-6"
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.8, duration: 0.3 }}
+          >
+            <p className="text-white">
+              Don't have an account? <a href="#" className="font-semibold">Sign up</a>
+            </p>
+          </motion.div>
+        </motion.form>
       </div>
-      
-      <div className="w-1/3 h-1 bg-white/30 rounded-full mx-auto mb-8"></div>
-    </div>
+    </motion.div>
   );
 };
 
