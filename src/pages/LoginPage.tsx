@@ -50,14 +50,18 @@ const LoginPage = ({ onLogin }: LoginPageProps) => {
         >
           <div className="flex items-center justify-center mb-6">
             <div className="bg-white/10 backdrop-blur-md rounded-xl p-3 mr-3">
-              <div className="w-12 h-12 bg-[#009ea3] rounded-lg flex items-center justify-center">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M20 10V7C20 5.89543 19.1046 5 18 5H6C4.89543 5 4 5.89543 4 7V10M20 10V19C20 20.1046 19.1046 21 18 21H6C4.89543 21 4 20.1046 4 19V10M20 10H4M9 13H15" stroke="white" strokeWidth="2" strokeLinecap="round" />
-                  <path d="M12 16C12.5523 16 13 15.5523 13 15C13 14.4477 12.5523 14 12 14C11.4477 14 11 14.4477 11 15C11 15.5523 11.4477 16 12 16Z" fill="white" />
+              <div className="w-16 h-16 flex items-center justify-center">
+                <svg width="64" height="64" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="96" height="96" rx="24" fill="#2D5F63"/>
+                  <path d="M24 36H72V32C72 28 68 24 64 24H32C28 24 24 28 24 32V36Z" fill="#C2F4E5"/>
+                  <path d="M24 36H72V64C72 68 68 72 64 72H32C28 72 24 68 24 64V36Z" fill="#C2F4E5"/>
+                  <path d="M53 58C55.2091 58 57 56.2091 57 54C57 51.7909 55.2091 50 53 50C50.7909 50 49 51.7909 49 54C49 56.2091 50.7909 58 53 58Z" fill="#2D5F63"/>
+                  <path d="M47 58L43 54L47 50" fill="#2D5F63"/>
+                  <path d="M59 50L63 54L59 58" fill="#2D5F63"/>
                 </svg>
               </div>
             </div>
-            <h1 className="text-4xl font-bold text-[#009ea3]">Loyal<span className="text-white">T</span></h1>
+            <h1 className="text-4xl font-bold font-sf-pro"><span className="text-white">Loyal</span><span className="text-[#C2F4E5]">T</span></h1>
           </div>
         </motion.div>
         

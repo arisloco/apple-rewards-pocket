@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -19,6 +18,9 @@ export default {
 			}
 		},
 		extend: {
+			fontFamily: {
+				'sf-pro': ['-apple-system', 'BlinkMacSystemFont', 'San Francisco', 'Helvetica Neue', 'sans-serif'],
+			},
 			colors: {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
@@ -63,23 +65,23 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				// Custom LoyalT brand colors based on your provided image
+				// Updated LoyalT brand colors based on the provided logo
 				'loyalt': {
-					'primary': '#00717a',  // Teal color from the logo
-					'secondary': '#009ea3', // Lighter teal for accents
+					'primary': '#2D5F63',  // Teal color from the logo
+					'secondary': '#C2F4E5', // Light mint color for accents
 					'gradient-start': '#73e5c5', // Gradient start color (top)
-					'gradient-end': '#009ea3',   // Gradient end color (bottom)
+					'gradient-end': '#2D5F63',   // Gradient end color (bottom)
 					'text': '#333333',      // Dark gray for text
 					'light': '#f8f8f8',     // Light background
 					'card': '#ffffff',      // White for cards
 				},
-				// Updated Apple-inspired colors with premium feel
+				// Apple-inspired colors with premium feel
 				'apple-blue': '#007AFF',
 				'apple-green': '#34C759',
 				'apple-red': '#FF3B30',
 				'apple-gray': '#8E9196',
-				'apple-light-gray': '#F8F8F8',
-				'apple-background': '#FFFFFF',
+				'apple-light-gray': '#F2F2F7', // Apple's system gray light
+				'apple-background': '#F5F5F7', // Apple's typical background gray
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
