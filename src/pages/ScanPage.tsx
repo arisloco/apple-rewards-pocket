@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Header from '../components/Header';
 import TabBar from '../components/TabBar';
@@ -6,7 +5,11 @@ import { Scan, Camera, CameraOff, Zap, ZapOff, QrCode } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 
-const ScanPage = () => {
+interface ScanPageProps {
+  onLogout?: () => void;
+}
+
+const ScanPage = ({ onLogout }: ScanPageProps) => {
   const [cameraActive, setCameraActive] = useState(false);
   const [flashOn, setFlashOn] = useState(false);
   

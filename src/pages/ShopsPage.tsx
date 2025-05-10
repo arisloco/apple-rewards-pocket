@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Header from '../components/Header';
 import TabBar from '../components/TabBar';
@@ -7,7 +6,11 @@ import { SearchIcon, Filter, MapPin, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
-const ShopsPage = () => {
+interface ShopsPageProps {
+  onLogout?: () => void;
+}
+
+const ShopsPage = ({ onLogout }: ShopsPageProps) => {
   const [view, setView] = useState<'map' | 'list'>('map');
   const [searchText, setSearchText] = useState('');
   

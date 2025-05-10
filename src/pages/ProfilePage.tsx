@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Header from '../components/Header';
 import TabBar from '../components/TabBar';
@@ -8,7 +7,11 @@ import {
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-const ProfilePage = () => {
+interface ProfilePageProps {
+  onLogout?: () => void;
+}
+
+const ProfilePage = ({ onLogout }: ProfilePageProps) => {
   const container = {
     hidden: { opacity: 0 },
     show: {

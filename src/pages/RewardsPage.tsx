@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Header from '../components/Header';
 import TabBar from '../components/TabBar';
@@ -8,7 +7,11 @@ import { motion } from 'framer-motion';
 import { Wallet, Ticket, Clock, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-const RewardsPage = () => {
+interface RewardsPageProps {
+  onLogout?: () => void;
+}
+
+const RewardsPage = ({ onLogout }: RewardsPageProps) => {
   const [selectedCard, setSelectedCard] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'active' | 'available' | 'expired'>('active');
   
