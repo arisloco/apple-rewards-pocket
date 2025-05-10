@@ -2,6 +2,7 @@
 import React from 'react';
 import { Info } from 'lucide-react';
 import QRCode from './QRCode';
+import { motion } from 'framer-motion';
 
 export interface RewardCardProps {
   id: string;
@@ -27,9 +28,14 @@ const RewardCard: React.FC<RewardCardProps> = ({
   onClick
 }) => {
   return (
-    <div 
-      className={`apple-card ${isActive ? 'snap-center' : 'snap-center opacity-75'} min-w-[280px] w-[80vw] max-w-sm animate-card-slide transition-all`}
+    <motion.div 
+      className={`apple-card ${isActive ? 'snap-center' : 'snap-center opacity-75'} min-w-[280px] w-[80vw] max-w-sm transition-all`}
       onClick={onClick}
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
     >
       <div className={`${color} rounded-t-2xl p-4 text-white`}>
         <div className="flex justify-between items-start">
@@ -42,9 +48,13 @@ const RewardCard: React.FC<RewardCardProps> = ({
               <p className="text-xs text-white/80">Valid until {expiryDate}</p>
             </div>
           </div>
-          <button className="rounded-full p-1 bg-white/10 hover:bg-white/20">
+          <motion.button 
+            className="rounded-full p-1 bg-white/10 hover:bg-white/20"
+            whileHover={{ rotate: 15 }}
+            whileTap={{ scale: 0.9 }}
+          >
             <Info size={16} />
-          </button>
+          </motion.button>
         </div>
         <h2 className="text-xl font-bold mt-6">{title}</h2>
         <p className="text-sm text-white/80 mt-1">{description}</p>
@@ -53,7 +63,13 @@ const RewardCard: React.FC<RewardCardProps> = ({
       <div className="bg-white p-4 rounded-b-2xl flex flex-col items-center">
         {isActive ? (
           <>
-            <QRCode value={id} size={160} />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.3 }}
+            >
+              <QRCode value={id} size={160} />
+            </motion.div>
             <p className="text-xs text-gray-500 mt-3 text-center">
               Present this QR code at {shopName} to redeem
             </p>
@@ -61,13 +77,17 @@ const RewardCard: React.FC<RewardCardProps> = ({
         ) : (
           <div className="py-6 flex flex-col items-center">
             <p className="text-gray-500 mb-4 text-center">Visit shop to activate</p>
-            <button className="apple-button text-sm py-2 px-4">
+            <motion.button 
+              className="bg-[#009ea3] text-white text-sm py-2 px-4 rounded-full"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
               View Details
-            </button>
+            </motion.button>
           </div>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 };
 
