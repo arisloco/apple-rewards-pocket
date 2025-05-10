@@ -1,3 +1,4 @@
+
 import React from 'react';
 import Header from '../components/Header';
 import TabBar from '../components/TabBar';
@@ -6,12 +7,15 @@ import {
   ChevronRight, Shield, Share2, Star, Award, Lock
 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 
 interface ProfilePageProps {
   onLogout?: () => void;
 }
 
 const ProfilePage = ({ onLogout }: ProfilePageProps) => {
+  const navigate = useNavigate();
+  
   const container = {
     hidden: { opacity: 0 },
     show: {
@@ -25,6 +29,13 @@ const ProfilePage = ({ onLogout }: ProfilePageProps) => {
   const item = {
     hidden: { y: 10, opacity: 0 },
     show: { y: 0, opacity: 1 }
+  };
+
+  const handleLogout = () => {
+    if (onLogout) {
+      onLogout();
+      navigate('/login');
+    }
   };
 
   const settingsGroups = [
@@ -58,6 +69,8 @@ const ProfilePage = ({ onLogout }: ProfilePageProps) => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
           className="premium-card p-6 mb-6 rounded-2xl"
+          whileHover={{ scale: 1.01 }}
+          whileTap={{ scale: 0.99 }}
         >
           <div className="flex items-center">
             <div className="mr-4">
@@ -95,10 +108,14 @@ const ProfilePage = ({ onLogout }: ProfilePageProps) => {
             </div>
           </div>
           
-          <button className="w-full mt-5 bg-loyalt-primary text-white rounded-full py-2.5 text-sm font-medium flex items-center justify-center">
+          <motion.button 
+            className="w-full mt-5 bg-loyalt-primary text-white rounded-full py-2.5 text-sm font-medium flex items-center justify-center"
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
+          >
             <Award className="h-4 w-4 mr-2" />
             View Membership Benefits
-          </button>
+          </motion.button>
         </motion.div>
         
         <motion.div 
@@ -108,7 +125,11 @@ const ProfilePage = ({ onLogout }: ProfilePageProps) => {
           className="space-y-6"
         >
           <div>
-            <div className="premium-card p-4 rounded-2xl">
+            <motion.div 
+              className="premium-card p-4 rounded-2xl"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
               <div className="flex justify-between items-center">
                 <div className="flex items-center">
                   <div className="w-10 h-10 rounded-full bg-loyalt-primary/10 flex items-center justify-center mr-3">
@@ -121,7 +142,7 @@ const ProfilePage = ({ onLogout }: ProfilePageProps) => {
                 </div>
                 <ChevronRight className="h-5 w-5 text-gray-400" />
               </div>
-            </div>
+            </motion.div>
           </div>
           
           {settingsGroups.map((group, idx) => (
@@ -130,7 +151,10 @@ const ProfilePage = ({ onLogout }: ProfilePageProps) => {
               <div className="premium-card rounded-2xl overflow-hidden">
                 {group.items.map((item, index) => (
                   <React.Fragment key={item.label}>
-                    <div className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50">
+                    <motion.div 
+                      className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50"
+                      whileHover={{ backgroundColor: 'rgba(0,0,0,0.03)' }}
+                    >
                       <div className="flex items-center">
                         <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center mr-3">
                           {item.icon}
@@ -138,7 +162,7 @@ const ProfilePage = ({ onLogout }: ProfilePageProps) => {
                         <span>{item.label}</span>
                       </div>
                       <ChevronRight className="h-5 w-5 text-gray-400" />
-                    </div>
+                    </motion.div>
                     {index < group.items.length - 1 && <div className="h-px bg-gray-100 mx-4" />}
                   </React.Fragment>
                 ))}
@@ -147,14 +171,19 @@ const ProfilePage = ({ onLogout }: ProfilePageProps) => {
           ))}
           
           <motion.div variants={item}>
-            <div className="premium-card p-4 rounded-2xl mt-4">
+            <motion.div 
+              className="premium-card p-4 rounded-2xl mt-4"
+              whileHover={{ scale: 1.02, backgroundColor: 'rgba(255,240,240,0.5)' }}
+              whileTap={{ scale: 0.98 }}
+              onClick={handleLogout}
+            >
               <div className="flex items-center text-red-500">
                 <div className="w-8 h-8 rounded-full bg-red-50 flex items-center justify-center mr-3">
                   <LogOut className="h-5 w-5 text-red-500" />
                 </div>
                 <span>Log Out</span>
               </div>
-            </div>
+            </motion.div>
           </motion.div>
           
           <motion.div variants={item} className="pt-3">
