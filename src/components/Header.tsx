@@ -1,18 +1,17 @@
 
 import React from 'react';
 import { useLocation } from 'react-router-dom';
+import { useAuth } from '@/hooks/useAuth';
 
-interface HeaderProps {
-  userName?: string;
-}
-
-const Header: React.FC<HeaderProps> = ({ userName = "Emma" }) => {
+const Header: React.FC = () => {
   const location = useLocation();
+  const { user } = useAuth();
+  
   let title = "";
   
   switch (location.pathname) {
     case "/":
-      title = `Hi, ${userName}`;
+      title = `Hi, ${user?.name?.split(' ')[0] || 'User'}`;
       break;
     case "/rewards":
       title = "Rewards";
@@ -25,6 +24,9 @@ const Header: React.FC<HeaderProps> = ({ userName = "Emma" }) => {
       break;
     case "/profile":
       title = "Profile";
+      break;
+    case "/vendor/dashboard":
+      title = "Dashboard";
       break;
     default:
       title = "";

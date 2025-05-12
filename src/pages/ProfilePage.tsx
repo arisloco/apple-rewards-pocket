@@ -7,14 +7,10 @@ import {
   ChevronRight, Shield, Share2, Star, Award, Lock
 } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/hooks/useAuth';
 
-interface ProfilePageProps {
-  onLogout?: () => void;
-}
-
-const ProfilePage = ({ onLogout }: ProfilePageProps) => {
-  const navigate = useNavigate();
+const ProfilePage = () => {
+  const { user, logout } = useAuth();
   
   const container = {
     hidden: { opacity: 0 },
@@ -32,10 +28,7 @@ const ProfilePage = ({ onLogout }: ProfilePageProps) => {
   };
 
   const handleLogout = () => {
-    if (onLogout) {
-      onLogout();
-      navigate('/login');
-    }
+    logout();
   };
 
   const settingsGroups = [
@@ -75,15 +68,15 @@ const ProfilePage = ({ onLogout }: ProfilePageProps) => {
           <div className="flex items-center">
             <div className="mr-4">
               <div className="h-20 w-20 rounded-full bg-gradient-to-br from-loyalt-gradient-start to-loyalt-gradient-end flex items-center justify-center text-white text-3xl font-semibold">
-                E
+                {user?.name.charAt(0) || 'U'}
               </div>
             </div>
             <div className="flex-1">
-              <h2 className="text-xl font-bold">Emma Johnson</h2>
-              <p className="text-gray-500 text-sm">emma@example.com</p>
+              <h2 className="text-xl font-bold">{user?.name || 'User'}</h2>
+              <p className="text-gray-500 text-sm">{user?.email || 'user@example.com'}</p>
               <div className="flex items-center mt-1">
                 <Star className="h-4 w-4 fill-yellow-400 stroke-yellow-400 mr-1" />
-                <span className="text-sm font-medium">Gold Member</span>
+                <span className="text-sm font-medium">{user?.membershipLevel === 'gold' ? 'Gold' : 'Standard'} Member</span>
               </div>
             </div>
             <button className="bg-loyalt-primary/10 rounded-full p-2">
@@ -94,7 +87,7 @@ const ProfilePage = ({ onLogout }: ProfilePageProps) => {
           <div className="mt-6 pt-6 border-t border-gray-100">
             <div className="grid grid-cols-3 gap-2 text-center">
               <div>
-                <p className="text-2xl font-bold">248</p>
+                <p className="text-2xl font-bold">{user?.points || 0}</p>
                 <p className="text-xs text-gray-500">Points</p>
               </div>
               <div>

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
@@ -12,9 +11,11 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
+import { useAuth } from '@/hooks/useAuth';
 
 const Index = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [selectedCard, setSelectedCard] = useState<string | null>(null);
   
   const activeRewards = [
@@ -127,7 +128,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-apple-light-gray pb-20">
-      <Header userName="Emma" />
+      <Header />
       
       <main className="apple-container pt-2">
         {/* Welcome section */}
@@ -139,7 +140,7 @@ const Index = () => {
         >
           <div className="premium-card p-5 rounded-2xl mb-8">
             <div className="flex justify-between items-center mb-3">
-              <h2 className="text-xl font-bold">Good Morning, Emma</h2>
+              <h2 className="text-xl font-bold">Good Morning, {user?.name?.split(' ')[0] || 'User'}</h2>
               <div className="bg-white/20 p-2 rounded-full">
                 <Ticket className="h-5 w-5" />
               </div>
@@ -147,12 +148,12 @@ const Index = () => {
             <div className="flex items-center space-x-4">
               <div className="bg-white/20 rounded-full p-3">
                 <div className="h-10 w-10 rounded-full bg-loyalt-primary flex items-center justify-center">
-                  <span className="text-white font-bold">248</span>
+                  <span className="text-white font-bold">{user?.points || 0}</span>
                 </div>
               </div>
               <div>
                 <p className="text-sm text-white/80">Total Points</p>
-                <p className="font-semibold">You're 52 points away from your next reward!</p>
+                <p className="font-semibold">You're {300 - (user?.points || 0)} points away from your next reward!</p>
               </div>
             </div>
           </div>
