@@ -27,12 +27,23 @@ const RewardCard: React.FC<RewardCardProps> = ({
   color = "bg-gradient-to-br from-blue-500 to-blue-600",
   onClick
 }) => {
+  // Add haptic feedback function for mobile devices
+  const handlePress = () => {
+    // Trigger haptic feedback if supported
+    if (window.navigator && window.navigator.vibrate) {
+      window.navigator.vibrate(50);
+    }
+    
+    // Call the original onClick handler
+    if (onClick) onClick();
+  };
+
   return (
     <motion.div 
       className={`apple-card ${isActive ? 'snap-center' : 'snap-center opacity-75'} min-w-[280px] w-[80vw] max-w-sm transition-all`}
-      onClick={onClick}
+      onClick={handlePress}
       whileHover={{ scale: 1.02 }}
-      whileTap={{ scale: 0.98 }}
+      whileTap={{ scale: 0.96 }}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
@@ -52,6 +63,7 @@ const RewardCard: React.FC<RewardCardProps> = ({
             className="rounded-full p-1 bg-white/10 hover:bg-white/20"
             whileHover={{ rotate: 15 }}
             whileTap={{ scale: 0.9 }}
+            aria-label="More information"
           >
             <Info size={16} />
           </motion.button>
