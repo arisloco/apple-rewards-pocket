@@ -1,24 +1,142 @@
-import React, { useState } from 'react';
+
+import React, { useState, useRef, useEffect } from 'react';
 import Header from '../components/Header';
 import TabBar from '../components/TabBar';
-import { Scan, Camera, CameraOff, Zap, ZapOff, QrCode } from 'lucide-react';
+import { Scan, Camera, CameraOff, Zap, ZapOff, QrCode, CheckCircle2, XCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { qrScannerService } from '@/lib/qrScanner';
+import { rewardsService, QRScanResult } from '@/lib/rewardsService';
+import { toast } from 'sonner';
 
-interface ScanPageProps {
-  onLogout?: () => void;
-}
-
-const ScanPage = ({ onLogout }: ScanPageProps) => {
+const ScanPage = () => {
   const [cameraActive, setCameraActive] = useState(false);
   const [flashOn, setFlashOn] = useState(false);
+  const [scanResult, setScanResult] = useState<QRScanResult | null>(null);
+  const [scanSuccess, setScanSuccess] = useState<boolean | null>(null);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [recentScans, setRecentScans] = useState<any[]>([]);
+  
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const controlsRef = useRef<any>(null);
+  
+  // Get recent scans from local storage or initialize empty array
+  useEffect(() => {
+    const savedScans = localStorage.getItem('recentScans');
+    if (savedScans) {
+      setRecentScans(JSON.parse(savedScans));
+    }
+  }, []);
+  
+  // Save recent scans to local storage when they change
+  useEffect(() => {
+    localStorage.setItem('recentScans', JSON.stringify(recentScans));
+  }, [recentScans]);
+  
+  // Clean up camera when component unmounts
+  useEffect(() => {
+    return () => {
+      if (cameraActive) {
+        qrScannerService.stopScanner();
+      }
+    };
+  }, [cameraActive]);
   
   const toggleCamera = () => {
-    setCameraActive(!cameraActive);
+    if (cameraActive) {
+      qrScannerService.stopScanner();
+      setCameraActive(false);
+    } else {
+      setCameraActive(true);
+      startScanner();
+    }
+  };
+  
+  const startScanner = async () => {
+    if (!videoRef.current) return;
+    
+    try {
+      setScanResult(null);
+      setScanSuccess(null);
+      
+      controlsRef.current = await qrScannerService.startScanner(
+        'qr-video',
+        handleScanSuccess,
+        (error) => {
+          console.error('QR scan error:', error);
+          toast.error('Failed to scan QR code');
+          setCameraActive(false);
+        }
+      );
+    } catch (error) {
+      console.error('Error starting scanner:', error);
+      toast.error('Failed to access camera');
+      setCameraActive(false);
+    }
+  };
+  
+  const handleScanSuccess = async (text: string) => {
+    if (isProcessing) return;
+    
+    setIsProcessing(true);
+    
+    try {
+      // Process the QR code
+      const result = await rewardsService.processQRCode(text);
+      
+      setScanResult(result);
+      setScanSuccess(!!result);
+      
+      // Add to recent scans if successful
+      if (result) {
+        const newScan = {
+          id: Date.now().toString(),
+          type: result.type,
+          value: result.value,
+          shopId: result.shopId,
+          timestamp: new Date().toISOString(),
+          description: result.description || (result.type === 'points' ? `Earned ${result.value} points` : 'Redeemed reward')
+        };
+        
+        setRecentScans(prev => [newScan, ...prev.slice(0, 9)]);
+        
+        // Show success notification
+        toast.success(
+          result.type === 'points' 
+            ? `You earned ${result.value} points!` 
+            : 'Reward redeemed successfully!'
+        );
+      } else {
+        toast.error('Failed to process QR code');
+      }
+    } catch (error) {
+      console.error('Error processing scan:', error);
+      toast.error('Error processing QR code');
+      setScanSuccess(false);
+    } finally {
+      // Pause scanner briefly to show result
+      if (controlsRef.current) {
+        qrScannerService.stopScanner();
+      }
+      
+      // Resume scanner after a delay
+      setTimeout(() => {
+        setIsProcessing(false);
+        
+        // Close camera if successful
+        if (scanSuccess) {
+          setCameraActive(false);
+        } else {
+          startScanner();
+        }
+      }, 3000);
+    }
   };
   
   const toggleFlash = () => {
+    // Flash functionality would require additional implementation with device APIs
     setFlashOn(!flashOn);
+    toast.info(flashOn ? 'Flash turned off' : 'Flash turned on');
   };
   
   return (
@@ -30,15 +148,18 @@ const ScanPage = ({ onLogout }: ScanPageProps) => {
           <div className="relative mb-6">
             <div className="bg-black rounded-2xl h-[60vh] w-full flex items-center justify-center overflow-hidden">
               <div className="relative w-full h-full">
-                {/* Camera view placeholder */}
-                <div className="w-full h-full bg-black">
-                  <svg className="w-full h-full opacity-30" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
-                    <path fill="none" stroke="#ffffff" strokeWidth="1" d="M20,20L80,80M80,20L20,80" />
-                  </svg>
-                </div>
+                {/* Camera view */}
+                <video
+                  id="qr-video"
+                  ref={videoRef}
+                  className="absolute inset-0 w-full h-full object-cover"
+                  autoPlay
+                  playsInline
+                  muted
+                />
 
                 {/* QR code scanner frame */}
-                <div className="absolute inset-0 flex items-center justify-center">
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                   <div className="w-64 h-64 border-2 border-white/80 rounded-2xl">
                     <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-loyalt-primary rounded-tl"></div>
                     <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-loyalt-primary rounded-tr"></div>
@@ -48,34 +169,67 @@ const ScanPage = ({ onLogout }: ScanPageProps) => {
                 </div>
                 
                 {/* Scanning animation */}
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  <motion.div 
-                    className="w-64 h-1 bg-loyalt-primary/60"
-                    initial={{ y: -120 }}
-                    animate={{ y: 120 }}
-                    transition={{ 
-                      duration: 2, 
-                      repeat: Infinity, 
-                      repeatType: "reverse" 
-                    }}
-                  ></motion.div>
-                </div>
+                <AnimatePresence>
+                  {!scanResult && !isProcessing && (
+                    <motion.div 
+                      className="absolute inset-0 flex items-center justify-center pointer-events-none"
+                      key="scanner-line"
+                    >
+                      <motion.div 
+                        className="w-64 h-1 bg-loyalt-primary/60"
+                        initial={{ y: -120 }}
+                        animate={{ y: 120 }}
+                        transition={{ 
+                          duration: 2, 
+                          repeat: Infinity, 
+                          repeatType: "reverse" 
+                        }}
+                      />
+                    </motion.div>
+                  )}
+                  
+                  {/* Scan result animation */}
+                  {scanSuccess !== null && (
+                    <motion.div 
+                      className="absolute inset-0 flex items-center justify-center pointer-events-none"
+                      initial={{ opacity: 0, scale: 0.5 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0 }}
+                      key="scan-result"
+                    >
+                      <div className={`w-32 h-32 rounded-full bg-opacity-80 flex items-center justify-center ${
+                        scanSuccess ? 'bg-green-500' : 'bg-red-500'
+                      }`}>
+                        {scanSuccess ? (
+                          <CheckCircle2 size={64} className="text-white" />
+                        ) : (
+                          <XCircle size={64} className="text-white" />
+                        )}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
                 
                 {/* Camera controls */}
                 <div className="absolute bottom-4 left-0 right-0 flex justify-center space-x-6">
                   <button 
                     className="w-12 h-12 bg-white/20 rounded-full backdrop-blur-md flex items-center justify-center"
                     onClick={toggleFlash}
+                    disabled={isProcessing}
                   >
                     {flashOn ? <ZapOff className="text-white" /> : <Zap className="text-white" />}
                   </button>
                   <button 
                     className="w-16 h-16 bg-white rounded-full flex items-center justify-center"
                     onClick={toggleCamera}
+                    disabled={isProcessing}
                   >
                     <CameraOff className="text-loyalt-primary" size={28} />
                   </button>
-                  <button className="w-12 h-12 bg-white/20 rounded-full backdrop-blur-md flex items-center justify-center">
+                  <button 
+                    className="w-12 h-12 bg-white/20 rounded-full backdrop-blur-md flex items-center justify-center"
+                    disabled={isProcessing}
+                  >
                     <QrCode className="text-white" />
                   </button>
                 </div>
@@ -83,7 +237,13 @@ const ScanPage = ({ onLogout }: ScanPageProps) => {
                 {/* Status text */}
                 <div className="absolute top-6 left-0 right-0 text-center">
                   <p className="text-white font-medium bg-black/40 backdrop-blur-md mx-auto w-max px-4 py-1 rounded-full text-sm">
-                    Scanning for QR Code...
+                    {isProcessing 
+                      ? 'Processing...' 
+                      : scanResult 
+                        ? scanSuccess 
+                          ? 'Success!' 
+                          : 'Failed to process QR code' 
+                        : 'Scanning for QR Code...'}
                   </p>
                 </div>
               </div>
@@ -142,7 +302,7 @@ const ScanPage = ({ onLogout }: ScanPageProps) => {
           </motion.div>
         )}
         
-        {!cameraActive && (
+        {!cameraActive && recentScans.length > 0 && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1, transition: { delay: 0.3 } }}
@@ -156,34 +316,49 @@ const ScanPage = ({ onLogout }: ScanPageProps) => {
               <Button variant="ghost" className="text-loyalt-primary">See All</Button>
             </div>
             <div className="mt-4 space-y-4">
-              <div className="flex items-center justify-between py-2 border-b border-gray-100">
-                <div className="flex items-center">
-                  <div className="h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden mr-3">
-                    <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=64&h=64&fit=crop&crop=center" alt="Urban Brew" className="h-8 w-8 object-cover" />
+              {recentScans.slice(0, 5).map((scan, index) => {
+                // Format date as relative time (today, yesterday, or date)
+                const scanDate = new Date(scan.timestamp);
+                const today = new Date();
+                const yesterday = new Date();
+                yesterday.setDate(today.getDate() - 1);
+                
+                let displayDate = scanDate.toLocaleDateString();
+                if (scanDate.toDateString() === today.toDateString()) {
+                  displayDate = 'Today';
+                } else if (scanDate.toDateString() === yesterday.toDateString()) {
+                  displayDate = 'Yesterday';
+                }
+                
+                return (
+                  <div key={scan.id} className={`flex items-center justify-between py-2 ${
+                    index < recentScans.length - 1 ? 'border-b border-gray-100' : ''
+                  }`}>
+                    <div className="flex items-center">
+                      <div className="h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden mr-3">
+                        {scan.shopId === 'shop-1' ? (
+                          <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=64&h=64&fit=crop&crop=center" alt="Urban Brew" className="h-8 w-8 object-cover" />
+                        ) : scan.shopId === 'shop-3' ? (
+                          <img src="https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?w=64&h=64&fit=crop&crop=center" alt="Sweet Treats" className="h-8 w-8 object-cover" />
+                        ) : (
+                          <Scan className="h-5 w-5 text-gray-500" />
+                        )}
+                      </div>
+                      <div>
+                        <p className="font-medium">{
+                          scan.shopId === 'shop-1' ? 'Urban Brew' : 
+                          scan.shopId === 'shop-3' ? 'Sweet Treats' : 
+                          'Shop'
+                        }</p>
+                        <p className="text-xs text-gray-500">{scan.description}</p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <span className="text-xs text-gray-500">{displayDate}</span>
+                    </div>
                   </div>
-                  <div>
-                    <p className="font-medium">Urban Brew</p>
-                    <p className="text-xs text-gray-500">+10 points added</p>
-                  </div>
-                </div>
-                <div className="text-right">
-                  <span className="text-xs text-gray-500">Today</span>
-                </div>
-              </div>
-              <div className="flex items-center justify-between py-2">
-                <div className="flex items-center">
-                  <div className="h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden mr-3">
-                    <img src="https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?w=64&h=64&fit=crop&crop=center" alt="Sweet Treats" className="h-8 w-8 object-cover" />
-                  </div>
-                  <div>
-                    <p className="font-medium">Sweet Treats</p>
-                    <p className="text-xs text-gray-500">Free Dessert activated</p>
-                  </div>
-                </div>
-                <div className="text-right">
-                  <span className="text-xs text-gray-500">Yesterday</span>
-                </div>
-              </div>
+                );
+              })}
             </div>
           </motion.div>
         )}

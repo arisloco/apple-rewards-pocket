@@ -3,6 +3,7 @@ import { createContext, useContext, useState, useEffect, ReactNode } from 'react
 import { User, authService } from '@/lib/auth';
 import { useNavigate } from 'react-router-dom';
 import { toast } from "sonner";
+import { supabase } from '@/lib/supabase';
 
 interface AuthContextType {
   user: User | null;
@@ -17,7 +18,7 @@ interface AuthContextType {
   logout: () => void;
   requestPasswordReset: (email: string) => Promise<void>;
   isLoading: boolean;
-  updateProfile?: (profileData: Partial<User>) => Promise<void>;
+  updateProfile: (profileData: Partial<User>) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -36,8 +37,47 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     const checkAuthState = async () => {
       setIsLoading(true);
       try {
-        const currentUser = authService.getCurrentUser();
-        setUser(currentUser);
+        // Check Supabase session first if available
+        if (supabase && supabase.auth) {
+          const { data } = await supabase.auth.getSession();
+          
+          if (data.session) {
+            // Session exists, get user data
+            const { data: userData } = await supabase.auth.getUser();
+            
+            if (userData.user) {
+              // Get profile data
+              const { data: profileData } = await supabase
+                .from('profiles')
+                .select('*')
+                .eq('user_id', userData.user.id)
+                .single();
+                
+              if (profileData) {
+                // User exists in Supabase
+                const user: User = {
+                  id: userData.user.id,
+                  email: userData.user.email!,
+                  name: profileData.name,
+                  role: profileData.role,
+                  points: profileData.points,
+                  membershipLevel: profileData.membership_level,
+                  createdAt: profileData.created_at
+                };
+                
+                setUser(user);
+              }
+            }
+          } else {
+            // Fallback to localStorage for demo
+            const currentUser = authService.getCurrentUser();
+            setUser(currentUser);
+          }
+        } else {
+          // Fallback to localStorage for demo
+          const currentUser = authService.getCurrentUser();
+          setUser(currentUser);
+        }
       } catch (error) {
         console.error('Error checking auth state', error);
         authService.logout();
@@ -47,6 +87,43 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     };
 
     checkAuthState();
+    
+    // Set up Supabase auth listener
+    if (supabase && supabase.auth) {
+      const { data: { subscription } } = supabase.auth.onAuthStateChange(
+        async (event, session) => {
+          if (event === 'SIGNED_IN' && session) {
+            // Get user profile from database
+            const { data: profileData } = await supabase
+              .from('profiles')
+              .select('*')
+              .eq('user_id', session.user.id)
+              .single();
+              
+            if (profileData) {
+              const user: User = {
+                id: session.user.id,
+                email: session.user.email!,
+                name: profileData.name,
+                role: profileData.role,
+                points: profileData.points,
+                membershipLevel: profileData.membership_level,
+                createdAt: profileData.created_at
+              };
+              
+              setUser(user);
+            }
+          } else if (event === 'SIGNED_OUT') {
+            setUser(null);
+          }
+        }
+      );
+      
+      // Cleanup subscription on unmount
+      return () => {
+        subscription.unsubscribe();
+      };
+    }
   }, []);
 
   const login = async (email: string, password: string) => {
@@ -111,20 +188,16 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
-  // This is a placeholder for future implementation
   const updateProfile = async (profileData: Partial<User>) => {
     if (!user) throw new Error('No user is logged in');
     
     setIsLoading(true);
     try {
-      // In a real implementation, we would send this to an API
-      const updatedUser = { ...user, ...profileData };
-      
-      // Update in localStorage for now
-      localStorage.setItem('user', JSON.stringify(updatedUser));
-      
+      // Update profile using authService
+      const updatedUser = await authService.updateProfile(user.id, profileData);
       setUser(updatedUser);
       toast.success('Profile updated successfully');
+      return updatedUser;
     } catch (error) {
       toast.error('Failed to update profile');
       throw error;

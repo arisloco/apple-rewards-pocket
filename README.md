@@ -1,73 +1,129 @@
-# Welcome to your Lovable project
 
-## Project info
+# LoyalT - Loyalty Rewards App
 
-**URL**: https://lovable.dev/projects/e1f191f0-b502-41d5-92bf-a45490355f9a
+LoyalT is a modern loyalty rewards application that helps businesses retain customers and reward their loyalty, while giving customers an easy way to track and redeem rewards.
 
-## How can I edit this code?
+## Features
 
-There are several ways of editing your application.
+### For Customers
+- Scan QR codes to earn points
+- View and redeem rewards
+- Find nearby participating shops
+- Track loyalty status and points
+- Manage personal profile
 
-**Use Lovable**
+### For Businesses
+- Create custom loyalty programs
+- Generate QR codes for points
+- View customer analytics
+- Customize reward cards
+- Track redemptions
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/e1f191f0-b502-41d5-92bf-a45490355f9a) and start prompting.
+## Technology Stack
 
-Changes made via Lovable will be committed automatically to this repo.
+- **Frontend**: React, TypeScript, Tailwind CSS, Framer Motion
+- **Backend**: Supabase (Authentication, Database, Storage, Edge Functions)
+- **Key Libraries**: 
+  - shadcn/ui for UI components
+  - react-router-dom for routing
+  - tanstack/react-query for data fetching
+  - qrcode.react for QR code generation
+  - @zxing/browser for QR code scanning
+  - recharts for analytics visualizations
 
-**Use your preferred IDE**
+## Getting Started
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Prerequisites
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+- Node.js (v14+ recommended)
+- npm or yarn
+- Supabase account (for backend services)
 
-Follow these steps:
+### Installation
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+1. Clone the repository
+```bash
+git clone https://github.com/yourusername/loyalt.git
+cd loyalt
 ```
 
-**Edit a file directly in GitHub**
+2. Install dependencies
+```bash
+npm install
+# or
+yarn
+```
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+3. Connect to Supabase
+- Create a Supabase project at https://supabase.com
+- Apply the database migrations in `supabase/migrations/`
+- Deploy the edge functions in `supabase/functions/`
+- Set up environment variables (see below)
 
-**Use GitHub Codespaces**
+4. Start the development server
+```bash
+npm run dev
+# or
+yarn dev
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+### Environment Variables
 
-## What technologies are used for this project?
+Create a `.env` file in the root directory with the following variables:
+```
+VITE_SUPABASE_URL=your-supabase-url
+VITE_SUPABASE_ANON_KEY=your-supabase-anon-key
+```
 
-This project is built with:
+## Database Schema
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+The application uses the following database tables:
+- `profiles` - User profiles with points and membership levels
+- `shops` - Business details and location information
+- `rewards` - Available rewards offered by businesses
+- `user_rewards` - Rewards claimed by users
+- `transactions` - Point earning and redemption history
+- `qr_codes` - QR codes for earning points
+- `loyalty_programs` - Business loyalty program configurations
 
-## How can I deploy this project?
+## Deployment
 
-Simply open [Lovable](https://lovable.dev/projects/e1f191f0-b502-41d5-92bf-a45490355f9a) and click on Share -> Publish.
+The application can be deployed to any static hosting provider:
 
-## Can I connect a custom domain to my Lovable project?
+1. Build the application
+```bash
+npm run build
+# or
+yarn build
+```
 
-Yes, you can!
+2. Deploy the contents of the `dist` directory
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+For Supabase deployment, use the Supabase CLI:
+```bash
+supabase functions deploy
+```
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+## Mobile App
+
+LoyalT can be built as a native mobile app using Capacitor:
+
+```bash
+npm run build
+npx cap sync
+npx cap open ios  # For iOS
+npx cap open android  # For Android
+```
+
+## Demo Accounts
+
+- **Customer**: 
+  - Email: `emma@example.com`
+  - Password: `password`
+- **Business**: 
+  - Email: `vendor@example.com` 
+  - Password: `password`
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
