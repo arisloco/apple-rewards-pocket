@@ -31,6 +31,9 @@ const Header: React.FC = () => {
     case "/vendor/dashboard":
       title = "Dashboard";
       break;
+    case "/login":
+      title = "Login";
+      break;
     default:
       // Extract last part of path for dynamic routes
       const pathSegments = location.pathname.split('/').filter(Boolean);

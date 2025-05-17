@@ -18,7 +18,7 @@ export interface User {
 const supabaseUrl = 'https://your-supabase-url.supabase.co';
 const supabaseKey = 'your-supabase-anon-key';
 
-// This will be replaced with actual Supabase client once integrated
+// Initialize Supabase client for future use
 // const supabase = createClient(supabaseUrl, supabaseKey);
 
 // Create a mock database of users for demo purposes
@@ -62,11 +62,13 @@ export const authService = {
     localStorage.setItem('user', JSON.stringify(user));
     localStorage.setItem('isLoggedIn', 'true');
     
-    // In a real implementation, we would:
-    // 1. Send credentials to Supabase
-    // 2. Receive and store JWT token
-    // 3. Set up refresh token mechanism
-    // 4. Handle session expiry
+    // In a real implementation with Supabase, we would:
+    // const { data, error } = await supabase.auth.signInWithPassword({
+    //   email,
+    //   password,
+    // });
+    // if (error) throw error;
+    // return data.user;
     
     return user;
   },
@@ -109,9 +111,25 @@ export const authService = {
     localStorage.setItem('isLoggedIn', 'true');
     
     // In a real implementation with Supabase, we would:
-    // 1. Register user with Supabase Auth
-    // 2. Create a profile in the database
-    // 3. Set up proper JWT handling
+    // const { data, error } = await supabase.auth.signUp({
+    //   email: userData.email,
+    //   password: userData.password,
+    //   options: {
+    //     data: {
+    //       name: userData.name,
+    //       role: userData.role,
+    //     }
+    //   }
+    // });
+    // if (error) throw error;
+    // Create profile in database
+    // await supabase.from('profiles').insert({
+    //   id: data.user.id,
+    //   name: userData.name,
+    //   role: userData.role,
+    //   points: 0,
+    //   membershipLevel: 'standard',
+    // });
     
     return newUser;
   },
@@ -121,9 +139,8 @@ export const authService = {
     localStorage.removeItem('user');
     localStorage.removeItem('isLoggedIn');
     
-    // In a real implementation:
-    // 1. Invalidate JWT token 
-    // 2. Clear all auth state
+    // In a real implementation with Supabase:
+    // return supabase.auth.signOut();
   },
   
   // Get current user
@@ -138,19 +155,25 @@ export const authService = {
       return null;
     }
     
-    // In a real implementation:
-    // 1. Check token validity
-    // 2. Refresh token if needed
-    // 3. Decode user data from token
+    // In a real implementation with Supabase:
+    // const { data: { user } } = await supabase.auth.getUser();
+    // if (!user) return null;
+    // Get additional profile data
+    // const { data: profile } = await supabase
+    //   .from('profiles')
+    //   .select('*')
+    //   .eq('id', user.id)
+    //   .single();
+    // return { ...profile, email: user.email };
   },
   
   // Check if user is logged in
   isAuthenticated: (): boolean => {
     return localStorage.getItem('isLoggedIn') === 'true' && !!authService.getCurrentUser();
     
-    // In a real implementation:
-    // 1. Verify token signature
-    // 2. Check token expiration
+    // In a real implementation with Supabase:
+    // const { data: { session } } = await supabase.auth.getSession();
+    // return !!session;
   },
   
   // Reset password (demo)
@@ -168,16 +191,8 @@ export const authService = {
     // In a real app, this would send an email with a reset link
     toast.success(`Password reset link sent to ${email}`);
     
-    // In a real implementation:
-    // 1. Generate a secure reset token
-    // 2. Save token with expiry in database
-    // 3. Send email with reset link
+    // In a real implementation with Supabase:
+    // const { error } = await supabase.auth.resetPasswordForEmail(email);
+    // if (error) throw error;
   },
-  
-  // Future methods to add:
-  // - refreshToken()
-  // - updateProfile()
-  // - changePassword()
-  // - validateToken()
 };
-
