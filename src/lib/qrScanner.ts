@@ -6,6 +6,7 @@ export class QRScannerService {
   private codeReader: BrowserQRCodeReader;
   private videoElement: HTMLVideoElement | null = null;
   private isScanning = false;
+  private controls: any = null;
 
   constructor() {
     this.codeReader = new BrowserQRCodeReader();
@@ -35,7 +36,7 @@ export class QRScannerService {
       this.isScanning = true;
       
       // Start decoding from the video stream
-      const controls = await this.codeReader.decodeFromStream(
+      this.controls = await this.codeReader.decodeFromStream(
         stream, 
         this.videoElement, 
         (result) => {
@@ -44,9 +45,6 @@ export class QRScannerService {
           }
         }
       );
-
-      // Return the controls to stop scanning later
-      return controls;
     } catch (error) {
       console.error('Error starting QR scanner:', error);
       if (onScanError) {
@@ -63,7 +61,10 @@ export class QRScannerService {
     }
     
     this.isScanning = false;
-    this.codeReader.reset();
+    
+    if (this.controls) {
+      this.controls.stop();
+    }
     
     if (this.videoElement && this.videoElement.srcObject) {
       const tracks = (this.videoElement.srcObject as MediaStream).getTracks();

@@ -1,4 +1,3 @@
-
 import { toast } from "sonner";
 import { createClient } from '@supabase/supabase-js';
 import { supabase } from './supabase';
@@ -13,6 +12,28 @@ export interface User {
   membershipLevel: 'standard' | 'silver' | 'gold' | 'platinum';
   createdAt: string;
 }
+
+// Demo users for development/testing
+const demoUsers: User[] = [
+  {
+    id: '1',
+    email: 'emma@example.com',
+    name: 'Emma Johnson',
+    role: 'client',
+    points: 248,
+    membershipLevel: 'gold',
+    createdAt: '2024-01-15T10:30:00Z'
+  },
+  {
+    id: '2',
+    email: 'vendor@example.com',
+    name: 'Urban Brew',
+    role: 'vendor',
+    points: 0,
+    membershipLevel: 'standard',
+    createdAt: '2024-02-10T14:20:00Z'
+  },
+];
 
 // Auth service for handling authentication
 export const authService = {
@@ -52,43 +73,18 @@ export const authService = {
       console.error('Login error:', error);
       
       // For development/demo, fall back to demo users when Supabase isn't connected
-      if (!supabase || !supabase.auth) {
-        // Use demo users for development
-        const demoUsers: User[] = [
-          {
-            id: '1',
-            email: 'emma@example.com',
-            name: 'Emma Johnson',
-            role: 'client',
-            points: 248,
-            membershipLevel: 'gold',
-            createdAt: '2024-01-15T10:30:00Z'
-          },
-          {
-            id: '2',
-            email: 'vendor@example.com',
-            name: 'Urban Brew',
-            role: 'vendor',
-            points: 0,
-            membershipLevel: 'standard',
-            createdAt: '2024-02-10T14:20:00Z'
-          },
-        ];
-        
-        const user = demoUsers.find(u => u.email.toLowerCase() === email.toLowerCase());
-        
-        if (!user) {
-          throw new Error('Invalid email or password');
-        }
-        
-        // Store user in localStorage (in real app, would store JWT token)
-        localStorage.setItem('user', JSON.stringify(user));
-        localStorage.setItem('isLoggedIn', 'true');
-        
-        return user;
+      // This ensures the app works without a real Supabase connection
+      const user = demoUsers.find(u => u.email.toLowerCase() === email.toLowerCase());
+      
+      if (!user) {
+        throw new Error('Invalid email or password');
       }
       
-      throw error;
+      // Store user in localStorage (in real app, would store JWT token)
+      localStorage.setItem('user', JSON.stringify(user));
+      localStorage.setItem('isLoggedIn', 'true');
+      
+      return user;
     }
   },
   

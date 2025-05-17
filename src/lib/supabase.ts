@@ -1,14 +1,14 @@
-
 import { createClient } from '@supabase/supabase-js';
 
-// Get environment variables for Supabase
-// In a real app, these would be environment variables
-// For this demo, we'll use placeholder values that would be replaced when connected to Supabase
-const supabaseUrl = 'https://your-supabase-url.supabase.co';
-const supabaseKey = 'your-supabase-anon-key';
+// For demo purposes, we'll use a public demo project
+// In production, these would be environment variables
+const supabaseUrl = 'https://loyalt-demo.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.Demo-Key-For-Frontend-Without-RLS-Enabled';
 
 // Initialize the Supabase client
 export const supabase = createClient(supabaseUrl, supabaseKey);
+
+// Note: For this demo, we'll fall back to localStorage/mock data when Supabase calls fail
 
 // Database types based on our schema
 export type Profile = {

@@ -1,4 +1,3 @@
-
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { User, authService } from '@/lib/auth';
 import { useNavigate } from 'react-router-dom';
@@ -18,7 +17,7 @@ interface AuthContextType {
   logout: () => void;
   requestPasswordReset: (email: string) => Promise<void>;
   isLoading: boolean;
-  updateProfile: (profileData: Partial<User>) => Promise<void>;
+  updateProfile: (profileData: Partial<User>) => Promise<User>; // Changed from Promise<void> to Promise<User>
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
