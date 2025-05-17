@@ -17,6 +17,7 @@ interface AuthContextType {
   logout: () => void;
   requestPasswordReset: (email: string) => Promise<void>;
   isLoading: boolean;
+  updateProfile?: (profileData: Partial<User>) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -97,8 +98,31 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setIsLoading(true);
     try {
       await authService.requestPasswordReset(email);
+      toast.success(`Password reset link sent to ${email}`);
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Failed to send reset link');
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // This is a placeholder for future implementation
+  const updateProfile = async (profileData: Partial<User>) => {
+    if (!user) throw new Error('No user is logged in');
+    
+    setIsLoading(true);
+    try {
+      // In a real implementation, we would send this to an API
+      const updatedUser = { ...user, ...profileData };
+      
+      // Update in localStorage for now
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+      
+      setUser(updatedUser);
+      toast.success('Profile updated successfully');
+    } catch (error) {
+      toast.error('Failed to update profile');
       throw error;
     } finally {
       setIsLoading(false);
@@ -112,7 +136,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     register,
     logout,
     requestPasswordReset,
-    isLoading
+    isLoading,
+    updateProfile
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
