@@ -1,7 +1,6 @@
 
 import React from 'react';
-import Header from '../components/Header';
-import TabBar from '../components/TabBar';
+import WebNavigation from '../components/WebNavigation';
 import { 
   User, Settings, CreditCard, Gift, Bell, HelpCircle, LogOut,
   ChevronRight, Shield, Share2, Star, Award, Lock
@@ -53,10 +52,10 @@ const ProfilePage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-apple-light-gray pb-20">
-      <Header />
+    <div className="min-h-screen bg-gray-50">
+      <WebNavigation />
       
-      <main className="apple-container">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -186,8 +185,6 @@ const ProfilePage = () => {
           </motion.div>
         </motion.div>
       </main>
-
-      <TabBar />
     </div>
   );
 };

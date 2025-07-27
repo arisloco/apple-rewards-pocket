@@ -4,8 +4,8 @@ import { motion } from 'framer-motion';
 import Header from '@/components/Header';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent } from '@/components/ui/card';
-import { AnalyticsDashboard } from '@/components/vendor/AnalyticsDashboard';
-import { CardCustomizer } from '@/components/vendor/CardCustomizer';
+import AnalyticsDashboard from '@/components/vendor/AnalyticsDashboard';
+import CardCustomizer from '@/components/vendor/CardCustomizer';
 import QRGenerator from '@/components/QRGenerator';
 
 const VendorDashboard = () => {

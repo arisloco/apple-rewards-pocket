@@ -1,7 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import Header from '../components/Header';
-import TabBar from '../components/TabBar';
+import WebNavigation from '../components/WebNavigation';
 import RewardCard from '../components/RewardCard';
 import CardDetail from '../components/CardDetail';
 import { motion } from 'framer-motion';
@@ -193,10 +192,10 @@ const RewardsPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-apple-light-gray pb-20">
-      <Header />
+    <div className="min-h-screen bg-gray-50">
+      <WebNavigation />
       
-      <main className="apple-container pt-2">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Stats Section */}
         <motion.div 
           initial={{ opacity: 0, y: 10 }}
@@ -367,8 +366,6 @@ const RewardsPage = () => {
           )}
         </motion.div>
       </main>
-
-      <TabBar />
       
       {selectedReward && (
         <CardDetail 

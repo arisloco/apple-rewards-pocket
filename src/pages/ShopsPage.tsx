@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import Header from '../components/Header';
-import TabBar from '../components/TabBar';
+import WebNavigation from '../components/WebNavigation';
 import GoogleMap from '../components/GoogleMap';
 import { SearchIcon, Filter, MapPin, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -73,10 +72,10 @@ const ShopsPage = ({ onLogout }: ShopsPageProps) => {
   ];
 
   return (
-    <div className="min-h-screen bg-apple-light-gray pb-20">
-      <Header />
+    <div className="min-h-screen bg-gray-50">
+      <WebNavigation />
       
-      <main className="apple-container">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-6">
           <div className="flex items-center gap-2">
             <div className="relative flex-1">
@@ -190,8 +189,6 @@ const ShopsPage = ({ onLogout }: ShopsPageProps) => {
           </div>
         </div>
       </main>
-
-      <TabBar />
     </div>
   );
 };

@@ -1,8 +1,7 @@
 
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import Header from '@/components/Header';
-import TabBar from '@/components/TabBar';
+import WebNavigation from '@/components/WebNavigation';
 import QRScanner from '@/components/QRScanner';
 import { Card, CardContent } from '@/components/ui/card';
 import { useAuth } from '@/hooks/useAuth';
@@ -50,16 +49,16 @@ const ScanPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-b from-loyalt-gradient-start to-loyalt-gradient-end">
-      <Header />
+    <div className="min-h-screen bg-gray-50">
+      <WebNavigation />
       
       <motion.div 
-        className="flex-1 p-4 overflow-y-auto"
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
       >
-        <div className="max-w-md mx-auto space-y-6">
+        <div className="max-w-2xl mx-auto space-y-6">
           <Card>
             <CardContent className="p-6">
               <h2 className="text-xl font-bold mb-4 text-center">Scan QR Code</h2>
@@ -112,8 +111,6 @@ const ScanPage = () => {
           </motion.div>
         </motion.div>
       )}
-      
-      <TabBar />
     </div>
   );
 };
